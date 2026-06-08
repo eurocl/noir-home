@@ -18,6 +18,8 @@ import authMiddleware from "./middleware/auth.js";
 dotenv.config();
 
 const app = express();
+/* Render / Reverse Proxy */
+app.set("trust proxy", 1);
 
 const PORT = process.env.PORT || 3000;
 

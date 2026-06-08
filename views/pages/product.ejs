@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    <%= product.name %> | Noir Home
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="/css/style.css"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap"
+    rel="stylesheet"
+  >
+
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+
+  <nav class="navbar">
+
+    <div class="logo">
+      Noir Home
+    </div>
+
+    <div class="nav-links">
+
+      <a href="/">Home</a>
+
+      <a href="/cart">Cart</a>
+
+      <% if(userId){ %>
+
+        <a href="/logout">
+          Logout
+        </a>
+
+      <% } else { %>
+
+        <a href="/login">
+          Login
+        </a>
+
+      <% } %>
+
+    </div>
+
+  </nav>
+
+  <!-- PRODUCT DETAIL -->
+
+  <section class="product-detail">
+
+    <!-- IMAGE -->
+
+    <div class="detail-image">
+
+      <img
+        src="<%= product.image %>"
+        alt="<%= product.name %>"
+      >
+
+    </div>
+
+    <!-- INFO -->
+
+    <div class="detail-info">
+
+      <p class="detail-category">
+        <%= product.category || "No Category" %>
+      </p>
+
+      <h1>
+        <%= product.name %>
+      </h1>
+
+      <p class="detail-description">
+        <%= product.description %>
+      </p>
+
+      <p class="detail-price">
+        $<%= product.price %>
+      </p>
+
+      <% if(product.stock > 0){ %>
+
+        <p class="stock in-stock">
+          In Stock
+        </p>
+
+      <% } else { %>
+
+        <p class="stock out-stock">
+          Out of Stock
+        </p>
+
+      <% } %>
+
+      <form
+        action="/cart/add/<%= product._id %>"
+        method="POST"
+      >
+
+        <button
+          type="submit"
+          class="add-cart-btn"
+        >
+          Add To Cart
+        </button>
+
+      </form>
+
+    </div>
+
+  </section>
+
+</body>
+
+</html>}

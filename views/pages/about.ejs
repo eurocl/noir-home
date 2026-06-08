@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    About Us | Noir Home
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="/css/style.css"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap"
+    rel="stylesheet"
+  >
+
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+
+  <nav class="navbar">
+
+    <div class="logo">
+      Noir Home
+    </div>
+
+    <div class="nav-links">
+
+      <a href="/">Home</a>
+
+      <a href="/cart">Cart</a>
+
+      <a href="/about">
+        About Us
+      </a>
+
+      <% if(userId){ %>
+
+        <a href="/logout">
+          Logout
+        </a>
+
+      <% } else { %>
+
+        <a href="/login">
+          Login
+        </a>
+
+      <% } %>
+
+    </div>
+
+  </nav>
+
+  <!-- ABOUT SECTION -->
+
+  <section class="about-page">
+
+    <!-- LEFT -->
+
+    <div class="about-content">
+
+      <p class="about-tag">
+        About Noir Home
+      </p>
+
+      <h1>
+        Designed For <br>
+        Timeless Living
+      </h1>
+
+      <p class="about-text">
+
+        Noir Home was created with a vision
+        to bring elegant, timeless, and curated
+        interior pieces into modern spaces.
+
+        We believe every object inside a home
+        should combine beauty, functionality,
+        and calm aesthetics.
+
+        Inspired by Scandinavian minimalism
+        and contemporary luxury, our collections
+        are carefully selected to transform
+        everyday living into an elevated experience.
+
+      </p>
+
+    </div>
+
+    <!-- RIGHT -->
+
+    <div class="about-image">
+
+      <img
+        src="/images/foto.jpg"
+        alt="Noir Home"
+      >
+
+    </div>
+
+  </section>
+
+</body>
+
+</html>

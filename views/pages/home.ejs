@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Noir Home</title>
+
+  <link
+    rel="stylesheet"
+    href="/css/style.css"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap"
+    rel="stylesheet"
+  >
+
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+
+  <nav class="navbar">
+
+    <div class="logo">
+      Noir Home
+    </div>
+
+    <div class="nav-links">
+
+      <a href="/">Home</a>
+
+      <a href="/cart">Cart</a>
+
+      <% if(userId){ %>
+
+        <a href="/logout">
+          Logout
+        </a>
+
+      <% } else { %>
+
+        <a href="/login">
+          Login
+        </a>
+
+      <% } %>
+
+    </div>
+
+  </nav>
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="hero-overlay">
+
+      <p class="hero-subtitle">
+        Timeless Interior Objects
+      </p>
+
+      <h1>
+        Elegant Living <br>
+        Starts At Home
+      </h1>
+
+      <a
+        href="#products"
+        class="hero-button"
+      >
+        Explore Collection
+      </a>
+
+    </div>
+
+  </section>
+
+  <!-- CATEGORIES -->
+
+  <section class="categories">
+
+    <div
+      class="category-card"
+      onclick="filterProducts('all')"
+    >
+      All
+    </div>
+
+    <div
+      class="category-card"
+      onclick="filterProducts('living')"
+    >
+      Living
+    </div>
+
+    <div
+      class="category-card"
+      onclick="filterProducts('bedroom')"
+    >
+      Bedroom
+    </div>
+
+    <div
+      class="category-card"
+      onclick="filterProducts('bathroom')"
+    >
+      Bathroom
+    </div>
+
+    <div
+      class="category-card"
+      onclick="filterProducts('kitchen')"
+    >
+      Kitchen
+    </div>
+
+    <div
+      class="category-card"
+      onclick="filterProducts('lighting')"
+    >
+      Lighting
+    </div>
+
+    <a
+  href="/about"
+  class="category-card"
+>
+  About Us
+</a>
+  </section>
+
+  <!-- PRODUCTS -->
+
+  <section
+    class="products-section"
+    id="products"
+  >
+
+    <div class="section-title">
+
+      <p>
+        Curated Collection
+      </p>
+
+      <h2>
+        Featured Products
+      </h2>
+
+    </div>
+
+    <div class="products-grid">
+
+      <% products.forEach(product => { %>
+
+        <a
+          href="/products/<%= product._id %>"
+          class="product-card"
+          data-category="<%= (product.category || '').toLowerCase().trim() %>"
+        >
+
+          <div class="product-image">
+
+            <img
+              src="<%= product.image %>"
+              alt="<%= product.name %>"
+            >
+
+          </div>
+
+          <div class="product-info">
+
+            <p class="category">
+              <%= product.category || 'Uncategorized' %>
+            </p>
+
+            <h3>
+              <%= product.name %>
+            </h3>
+
+            <p class="price">
+              $<%= product.price %>
+            </p>
+
+          </div>
+
+        </a>
+
+      <% }) %>
+
+    </div>
+
+  </section>
+
+  <!-- FILTER SCRIPT -->
+
+  <script>
+
+    function filterProducts(category){
+
+      const cards =
+        document.querySelectorAll(
+          ".product-card"
+        );
+
+      cards.forEach(card => {
+
+        const productCategory =
+          card.dataset.category;
+
+        if(category === "all"){
+
+          card.style.display = "";
+
+          return;
+
+        }
+
+        if(productCategory === category){
+
+          card.style.display = "";
+
+        } else {
+
+          card.style.display = "none";
+
+        }
+
+      });
+
+    }
+
+  </script>
+
+  <script>
+
+window.addEventListener("load", () => {
+
+  const loader =
+    document.getElementById("loader");
+
+  setTimeout(() => {
+
+    loader.classList.add("hide");
+
+  }, 700);
+
+});
+
+</script>
+
+</body>
+
+
+
+</html>

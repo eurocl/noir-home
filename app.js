@@ -90,7 +90,7 @@ app.set("view engine", "ejs");
 ========================= */
 
 app.use(
-  "/api/products",
+  "/products",
   productsRoutes
 );
 

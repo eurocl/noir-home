@@ -356,6 +356,10 @@ app.post("/login", async (req, res) => {
 
     );
 
+    // Mantener sesión
+req.session.userId = user._id;
+req.session.userName = user.name;
+
     res.status(200).json({
       token
     });

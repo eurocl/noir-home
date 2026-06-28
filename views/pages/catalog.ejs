@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Noir Home | Catalog</title>
+
+  <link
+    rel="stylesheet"
+    href="/css/style.css"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap"
+    rel="stylesheet"
+  >
+
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+
+  <nav class="navbar">
+
+    <div class="logo">
+      Noir Home
+    </div>
+
+    <div class="nav-links">
+
+      <a href="/">Home</a>
+
+      <a href="/catalog">Catalog</a>
+
+      <a href="/cart">Cart</a>
+
+      <% if(userId){ %>
+
+        <a href="/logout">Logout</a>
+
+      <% } else { %>
+
+        <a href="/login">Login</a>
+
+      <% } %>
+
+    </div>
+
+  </nav>
+
+  <!-- PRODUCTS -->
+
+  <section
+    class="products-section"
+    id="products"
+  >
+
+    <div class="section-title">
+
+      <p>
+        Backend API
+      </p>
+
+      <h2>
+        Products loaded with Fetch
+      </h2>
+
+    </div>
+
+    <div
+      class="products-grid"
+      id="products-grid"
+    >
+
+    </div>
+
+  </section>
+
+<script>
+
+async function loadProducts(){
+
+    try{
+
+        const response = await fetch("/products");
+
+        const products = await response.json();
+
+        const grid =
+            document.getElementById("products-grid");
+
+        grid.innerHTML = "";
+
+        products.forEach(product=>{
+
+            grid.innerHTML += `
+
+            <a
+                href="/products/${product._id}"
+                class="product-card"
+            >
+
+                <div class="product-image">
+
+                    <img
+                        src="${product.image}"
+                        alt="${product.name}"
+                    >
+
+                </div>
+
+                <div class="product-info">
+
+                    <p class="category">
+
+                        ${product.category}
+
+                    </p>
+
+                    <h3>
+
+                        ${product.name}
+
+                    </h3>
+
+                    <p class="price">
+
+                        $${product.price}
+
+                    </p>
+
+                </div>
+
+            </a>
+
+            `;
+
+        });
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+loadProducts();
+
+</script>
+
+</body>
+
+</html>

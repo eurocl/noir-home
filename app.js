@@ -113,6 +113,8 @@ mongoose
 
   });
 
+
+
 /* =========================
    HOME
 ========================= */
@@ -121,31 +123,23 @@ app.get("/", async (req, res) => {
 
   try {
 
-    const products =
-      await Product.find();
+    const products = await Product.find();
 
-    res.render(
-      "pages/home",
-      {
+    res.render("pages/home", {
 
-        products,
+      products,
 
-        userId:
-          req.session.userId,
+      userId: req.session.userId,
 
-        userName:
-          req.session.userName,
+      userName: req.session.userName,
 
-      }
-    );
+    });
 
   } catch (err) {
 
     console.log(err);
 
-    res.send(
-      "Error loading products"
-    );
+    res.send("Error loading products");
 
   }
 
@@ -621,6 +615,9 @@ app.get(
   }
 );
 
+/* =========================
+   about
+========================= */
 
 
 app.get("/about", (req, res) => {
@@ -636,6 +633,22 @@ app.get("/about", (req, res) => {
   });
 
 });
+
+/* =========================
+   CATALOG
+========================= */
+
+app.get("/catalog", (req, res) => {
+
+  res.render("pages/catalog", {
+
+    userId: req.session.userId,
+    userName: req.session.userName,
+
+  });
+
+});
+
 
 /* =========================
    404

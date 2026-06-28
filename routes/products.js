@@ -29,6 +29,8 @@ router.get("/", async (req, res) => {
 
 /* GET PRODUCT BY ID */
 
+
+
 router.get("/:id", async (req, res) => {
 
   try {
@@ -50,6 +52,14 @@ router.get("/:id", async (req, res) => {
   } catch (err) {
 
     console.log(err);
+
+    if (err.name === "CastError") {
+
+      return res.status(404).json({
+        message: "Product not found"
+      });
+
+    }
 
     res.status(500).json({
       message: "Error loading product"

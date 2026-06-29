@@ -2,82 +2,41 @@
 <html lang="en">
 
 <head>
-
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <title>Cart | Noir Home</title>
 
-  <title>
-    Cart | Noir Home
-  </title>
+  <link rel="stylesheet" href="/css/style.css">
 
-  <link
-    rel="stylesheet"
-    href="/css/style.css"
-  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com"
-  >
-
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  >
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap"
-    rel="stylesheet"
-  >
-
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
   <!-- NAVBAR -->
-
   <nav class="navbar">
-
-    <div class="logo">
-      Noir Home
-    </div>
+    <div class="logo">Noir Home</div>
 
     <div class="nav-links">
-
       <a href="/">Home</a>
-
       <a href="/cart">Cart</a>
-
-      <a href="/logout">
-        Logout
-      </a>
-
+      <a href="/logout">Logout</a>
     </div>
-
   </nav>
 
   <!-- CART -->
-
   <section class="cart-page">
 
     <div class="cart-header">
-
-      <p>
-        Your Selection
-      </p>
-
-      <h1>
-        Shopping Cart
-      </h1>
-
+      <p>Your Selection</p>
+      <h1>Shopping Cart</h1>
     </div>
 
-    <% if(cart && cart.products.length > 0){ %>
+    <% if(cart && cart.products && cart.products.length > 0){ %>
 
       <div class="cart-grid">
 
@@ -85,123 +44,82 @@
 
         <% cart.products.forEach(item => { %>
 
-          <% total += item.productId.price * item.quantity %>
+          <% if(item.productId){ %>
 
-          <div class="cart-card">
+            <% total += item.productId.price * item.quantity; %>
 
-            <!-- IMAGE -->
+            <div class="cart-card">
 
-            <div class="cart-image">
+              <!-- IMAGE -->
+              <div class="cart-image">
+                <img src="<%= item.productId.image %>" alt="<%= item.productId.name %>">
+              </div>
 
-              <img
-                src="<%= item.productId.image %>"
-                alt="<%= item.productId.name %>"
-              >
+              <!-- INFO -->
+              <div class="cart-info">
 
-            </div>
+                <p class="cart-category">
+                  <%= item.productId.category || 'Uncategorized' %>
+                </p>
 
-            <!-- INFO -->
+                <h2>
+                  <%= item.productId.name %>
+                </h2>
 
-            <div class="cart-info">
+                <p class="cart-description">
+                  <%= item.productId.description %>
+                </p>
 
-              <p class="cart-category">
-                <%= item.productId.category %>
-              </p>
+                <!-- CONTROLS -->
+                <div class="cart-bottom">
 
-              <h2>
-                <%= item.productId.name %>
-              </h2>
+                  <div class="cart-controls">
 
-              <p class="cart-description">
-                <%= item.productId.description %>
-              </p>
+                    <!-- DECREASE -->
+                    <form action="/cart/decrease/<%= item.productId._id %>" method="POST">
+                      <button type="submit" class="qty-btn">-</button>
+                    </form>
 
-              <!-- CONTROLS -->
+                    <span class="cart-quantity">
+                      <%= item.quantity %>
+                    </span>
 
-              <div class="cart-bottom">
+                    <!-- INCREASE -->
+                    <form action="/cart/increase/<%= item.productId._id %>" method="POST">
+                      <button type="submit" class="qty-btn">+</button>
+                    </form>
 
-                <div class="cart-controls">
+                  </div>
 
-                  <!-- RESTAR -->
-
-                  <form
-                    action="/cart/decrease/<%= item.productId._id %>"
-                    method="POST"
-                  >
-                    <button
-                      type="submit"
-                      class="qty-btn"
-                    >
-                      -
-                    </button>
-                  </form>
-
-                  <!-- CANTIDAD -->
-
-                  <span class="cart-quantity">
-                    <%= item.quantity %>
-                  </span>
-
-                  <!-- SUMAR -->
-
-                  <form
-                    action="/cart/increase/<%= item.productId._id %>"
-                    method="POST"
-                  >
-                    <button
-                      type="submit"
-                      class="qty-btn"
-                    >
-                      +
-                    </button>
-                  </form>
+                  <p class="cart-price">
+                    $<%= item.productId.price * item.quantity %>
+                  </p>
 
                 </div>
 
-                <!-- PRECIO -->
-
-                <p class="cart-price">
-                  $<%= item.productId.price * item.quantity %>
-                </p>
+                <!-- REMOVE -->
+                <form action="/cart/remove/<%= item.productId._id %>" method="POST">
+                  <button type="submit" class="remove-btn">
+                    Remove Product
+                  </button>
+                </form>
 
               </div>
 
-              <!-- REMOVE -->
-
-              <form
-                action="/cart/remove/<%= item.productId._id %>"
-                method="POST"
-              >
-                <button
-                  type="submit"
-                  class="remove-btn"
-                >
-                  Remove Product
-                </button>
-              </form>
-
             </div>
 
-          </div>
+          <% } %>
 
         <% }) %>
 
       </div>
 
       <!-- TOTAL -->
-
       <div class="cart-total">
 
         <div>
-
-          <p class="total-label">
-            Total
-          </p>
-
-          <h2>
-            $<%= total %>
-          </h2>
-
+          <p class="total-label">Total</p>
+          <h2>$<%= total %></h2>
         </div>
 
         <button class="checkout-btn">
@@ -213,15 +131,8 @@
     <% } else { %>
 
       <div class="empty-cart">
-
-        <h2>
-          Your cart is empty
-        </h2>
-
-        <a href="/">
-          Continue Shopping
-        </a>
-
+        <h2>Your cart is empty</h2>
+        <a href="/">Continue Shopping</a>
       </div>
 
     <% } %>
@@ -229,5 +140,4 @@
   </section>
 
 </body>
-
 </html>

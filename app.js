@@ -204,19 +204,22 @@ app.post("/cart/add/:id", async (req, res) => {
 
 app.get("/cart", async (req, res) => {
   try {
-    if (!req.session.userId) return res.redirect("/login");
+    if (!req.session.userId) {
+      return res.redirect("/login");
+    }
 
     const cart = await Cart.findOne({
       userId: req.session.userId,
     }).populate("products.productId");
 
     res.render("pages/cart", {
-      cart,
+      cart: cart || { products: [] },
       userName: req.session.userName,
     });
+
   } catch (err) {
-    console.log(err);
-    res.send("Cart error");
+    console.log("CART ERROR:", err);
+    res.status(500).send("Cart error");
   }
 });
 

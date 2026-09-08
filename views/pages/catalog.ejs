@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
 
@@ -10,7 +10,7 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Noir Home | Catalog</title>
+  <title>Noir Home | Catálogo</title>
 
   <link
     rel="stylesheet"
@@ -33,6 +33,7 @@
     rel="stylesheet"
   >
 
+  <link rel="stylesheet" href="/css/architecture.css">
 </head>
 
 <body>
@@ -47,19 +48,19 @@
 
     <div class="nav-links">
 
-      <a href="/">Home</a>
+      <a href="/">Inicio</a>
 
-      <a href="/catalog">Catalog</a>
+      <a href="/catalog">Catálogo</a>
 
-      <a href="/cart">Cart</a>
+      <a href="/cart">Carrito</a>
 
       <% if(userId){ %>
 
-        <a href="/logout">Logout</a>
+        <a href="/logout">Cerrar sesión</a>
 
       <% } else { %>
 
-        <a href="/login">Login</a>
+        <a href="/login">Ingresar</a>
 
       <% } %>
 
@@ -67,109 +68,54 @@
 
   </nav>
 
-  <!-- PRODUCTS -->
-
-  <section
-    class="products-section"
-    id="products"
-  >
-
-    <div class="section-title">
-
-      <p>
-        Backend API
-      </p>
-
-      <h2>
-        Products loaded with Fetch
-      </h2>
-
+<main class="architecture">
+  <header class="architecture-intro">
+    <p class="architecture-eyebrow">Propiedades · Arquitectura · Naturaleza</p>
+    <h1>Habitar lo esencial.</h1>
+    <div class="architecture-intro-copy">
+      <p>Edificios de carácter brutalista, pensados desde la calma del minimalismo. El hormigón a la vista, las formas puras y la luz natural proponen una manera de habitar en conexión con el entorno.</p>
+      <p>Una selección conceptual de propiedades donde la arquitectura deja espacio a lo importante: la naturaleza, el silencio y la vida cotidiana.</p>
     </div>
-
-    <div
-      class="products-grid"
-      id="products-grid"
-    >
-
-    </div>
-
-  </section>
-
-<script>
-
-async function loadProducts(){
-
-    try{
-
-        const response = await fetch("/products");
-
-        const products = await response.json();
-
-        const grid =
-            document.getElementById("products-grid");
-
-        grid.innerHTML = "";
-
-        products.forEach(product=>{
-
-            grid.innerHTML += `
-
-            <a
-                href="/products/${product._id}"
-                class="product-card"
-            >
-
-                <div class="product-image">
-
-                    <img
-                        src="${product.image}"
-                        alt="${product.name}"
-                    >
-
-                </div>
-
-                <div class="product-info">
-
-                    <p class="category">
-
-                        ${product.category}
-
-                    </p>
-
-                    <h3>
-
-                        ${product.name}
-
-                    </h3>
-
-                    <p class="price">
-
-                        $${product.price}
-
-                    </p>
-
-                </div>
-
-            </a>
-
-            `;
-
-        });
-
-    }
-
-    catch(error){
-
-        console.error(error);
-
-    }
-
-}
-
-loadProducts();
-
-</script>
-
+    <span class="architecture-note">Edificios modelo · Visualizaciones conceptuales</span>
+  </header>
+  <% const galleries = [
+    { id: 'edificios', number: '01', title: 'La fuerza de la materia', text: 'Volúmenes de hormigón, terrazas abiertas y patios verdes. Edificios modelo que exploran el encuentro entre la presencia de la arquitectura y la suavidad del paisaje.', slides: [
+      { image: 'exterior-bosque', title: 'Entre árboles', caption: 'Terrazas profundas y hormigón a la vista en diálogo con el bosque.', alt: 'Edificio brutalista de hormigón con terrazas rodeado de bosque' },
+      { image: 'exterior-patio', title: 'Un patio para encontrarse', caption: 'Un vacío central donde la vegetación acompaña la vida compartida.', alt: 'Edificio de viviendas de hormigón alrededor de un patio arbolado' }
+    ]},
+    { id: 'interiores', number: '02', title: 'Espacio para la calma', text: 'Interiores que encuentran su expresión en lo esencial. Materiales honestos, una paleta serena y aperturas al exterior permiten que la luz y la naturaleza sean protagonistas.', slides: [
+      { image: 'interior-luz', title: 'La luz como material', caption: 'Una sala abierta al paisaje, con texturas naturales y líneas simples.', alt: 'Interior minimalista de doble altura con una gran ventana hacia el bosque' },
+      { image: 'interior-patio', title: 'Naturaleza hacia adentro', caption: 'Un patio interior transforma el recorrido en una pausa cotidiana.', alt: 'Galería de hormigón con banco de madera y patio interior plantado' }
+    ]},
+    { id: 'jardines-nocturnos', number: '03', night: true, title: 'Jardines de luz', text: 'Pequeños paisajes interiores enmarcados por luz turquesa. El musgo, los árboles y el hormigón crean refugios para detenerse y contemplar.', slides: [
+      { image: 'nocturno-jardin', title: 'Un bosque enmarcado', caption: 'Un estar íntimo frente a un jardín que ilumina la noche.', alt: 'Estar de hormigón oscuro frente a un jardín de musgo con iluminación turquesa' },
+      { image: 'nocturno-refugio', title: 'Un rincón para detenerse', caption: 'Vegetación, una luz cálida y la calma de un espacio recogido.', alt: 'Rincón de lectura con banco de hormigón y jardín de helechos iluminado en azul' }
+    ]},
+    { id: 'reflejos-nocturnos', number: '04', night: true, title: 'Reflejos y silencio', text: 'La luz recorre el agua y dibuja caminos entre sombras. Espacios minimalistas donde cada reflejo prolonga la presencia de la naturaleza.', slides: [
+      { image: 'nocturno-agua', title: 'El jardín sobre el agua', caption: 'Un espejo de agua recoge el brillo azul y la silueta de las plantas.', alt: 'Espejo de agua en un interior brutalista con jardín y reflejos de luz cian' },
+      { image: 'nocturno-pasaje', title: 'Camino a la calma', caption: 'Un recorrido de hormigón que termina en un pequeño paisaje vivo.', alt: 'Pasaje de hormigón oscuro hacia un patio con árbol, musgo y luz turquesa' }
+    ]}
+    ,{ id: 'paisajes-verdes', number: '05', landscape: true, title: 'Entre el gris y lo verde', text: 'Arquitectura brutalista que encuentra su equilibrio en el paisaje. Hormigón en tonos grafito, líneas esenciales y vegetación libre para habitar cerca de la naturaleza.', slides: [
+      { image: 'paisaje-refugio', title: 'Refugio en el paisaje', caption: 'Volúmenes sobrios se abren al verde del bosque y la pradera.', alt: 'Residencia brutalista minimalista de hormigón gris oscuro entre praderas verdes y montañas boscosas' },
+      { image: 'paisaje-ladera', title: 'Habitar la ladera', caption: 'Terrazas de hormigón oscuro acompañan el relieve natural del valle.', alt: 'Edificio brutalista de hormigón grafito integrado en una ladera verde con vistas al bosque' }
+    ]}
+  ]; %>
+  <% galleries.forEach(gallery => { %>
+    <% if (gallery.number === '03') { %>
+      <header class="night-intro" id="naturaleza-nocturna">
+        <p class="architecture-eyebrow">Atmósferas nocturnas · Jardines interiores</p>
+        <h2>Naturaleza en la penumbra.</h2>
+        <p>El azul ilumina lo vivo. Una exploración de interiores brutalistas donde la vegetación, el agua y la luz transforman la oscuridad en un lugar de paz.</p>
+        <span class="architecture-note">Visualizaciones conceptuales inspiradas en un jardín de luz azul</span>
+      </header>
+    <% } %>
+    <section id="gallery-<%= gallery.id %>" class="architecture-gallery<%= gallery.night ? ' architecture-night' : '' %><%= gallery.landscape ? ' architecture-landscape' : '' %>" aria-labelledby="title-<%= gallery.id %>">
+      <div class="architecture-gallery-heading"><span class="architecture-number"><%= gallery.number %></span><div><h2 id="title-<%= gallery.id %>"><%= gallery.title %></h2><p><%= gallery.text %></p></div></div>
+      <%- include("property-gallery", { gallery }) %>
+    </section>
+  <% }); %>
+  <footer class="architecture-footer"><p>Una mirada conectada a la naturaleza.</p><a href="/">Explorar objetos para el hogar <span aria-hidden="true">↗</span></a></footer>
+</main>
+<script src="/js/catalog.js" defer></script>
 </body>
-
 </html>

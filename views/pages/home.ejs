@@ -22,14 +22,14 @@
     <div class="logo">Noir Home</div>
 
     <div class="nav-links">
-      <a href="/">Home</a>
-      <a href="/catalog">Catalog</a>
-      <a href="/cart">Cart</a>
+      <a href="/">Inicio</a>
+      <a href="/catalog">Catálogo</a>
+      <a href="/cart">Carrito</a>
 
       <% if(userId){ %>
-        <a href="/logout">Logout</a>
+        <a href="/logout">Cerrar sesión</a>
       <% } else { %>
-        <a href="/login">Login</a>
+        <a href="/login">Ingresar</a>
       <% } %>
     </div>
   </nav>
@@ -40,12 +40,11 @@
       <p class="hero-subtitle">Timeless Interior Objects</p>
 
       <h1>
-        Elegant Living <br>
-        Starts At Home
+        Una mirada conectada a la naturaleza para encontrar paz
       </h1>
 
       <a href="#products" class="hero-button">
-        Explore Collection
+        Explorar colección
       </a>
     </div>
   </section>
@@ -53,14 +52,12 @@
   <!-- CATEGORIES -->
   <section class="categories">
 
-    <div class="category-card" onclick="filterProducts('all')">All</div>
-    <div class="category-card" onclick="filterProducts('living')">Living</div>
-    <div class="category-card" onclick="filterProducts('bedroom')">Bedroom</div>
-    <div class="category-card" onclick="filterProducts('bathroom')">Bathroom</div>
-    <div class="category-card" onclick="filterProducts('kitchen')">Kitchen</div>
-    <div class="category-card" onclick="filterProducts('lighting')">Lighting</div>
+    <% ['All', 'Living', 'Bedroom', 'Bathroom', 'Kitchen', 'Lighting'].forEach(category => { %>
+      <button type="button" class="category-card" data-filter="<%= category.toLowerCase() %>"
+              aria-pressed="<%= category === 'All' %>" aria-controls="product-grid"><%= category %></button>
+    <% }) %>
 
-    <a href="/about" class="category-card">About Us</a>
+    <a href="/about" class="category-card">Sobre nosotros</a>
 
   </section>
 
@@ -72,7 +69,9 @@
       <h2>Featured Products</h2>
     </div>
 
-    <div class="products-grid">
+    <p id="filter-status" class="filter-status" role="status"></p>
+    <p id="empty-category" hidden>No products in this category yet.</p>
+    <div class="products-grid" id="product-grid">
 
       <% products.forEach(product => { %>
 
@@ -98,7 +97,7 @@
           <% if(userId){ %>
             <form action="/cart/add/<%= product._id %>" method="POST">
               <button type="submit" class="add-cart-btn">
-                Add To Cart
+                Agregar al carrito
               </button>
             </form>
           <% } %>
@@ -112,23 +111,7 @@
   </section>
 
   <!-- FILTER SCRIPT -->
-  <script>
-    function filterProducts(category) {
-      const cards = document.querySelectorAll(".product-card");
-
-      cards.forEach(card => {
-        const productCategory = card.dataset.category;
-
-        if (category === "all") {
-          card.style.display = "";
-          return;
-        }
-
-        card.style.display =
-          productCategory === category ? "" : "none";
-      });
-    }
-  </script>
+  <script src="/js/home.js" defer></script>
 
 </body>
 </html>

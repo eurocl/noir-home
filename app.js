@@ -6,6 +6,8 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { fileURLToPath } from "node:url";
+import dns from "node:dns";
 
 import Product from "./models/Product.js";
 import User from "./models/User.js";
@@ -13,7 +15,7 @@ import Cart from "./models/Cart.js";
 
 import productsRoutes from "./routes/products.js";
 
-dotenv.config();
+dotenv.config({ path: fileURLToPath(new URL(".env", import.meta.url)) });
 
 const app = express();
 
@@ -25,7 +27,7 @@ const PORT = process.env.PORT || 3000;
 ========================= */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use(express.static(fileURLToPath(new URL("public", import.meta.url))));
 
 /* =========================
    SESSION
@@ -59,6 +61,7 @@ app.use(
    VIEW ENGINE
 ========================= */
 app.set("view engine", "ejs");
+app.set("views", fileURLToPath(new URL("views", import.meta.url)));
 
 /* =========================
    ROUTES
@@ -68,10 +71,6 @@ app.use("/products", productsRoutes);
 /* =========================
    MONGO
 ========================= */
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ Mongo conectado"))
-  .catch((err) => console.log(err));
 
 /* =========================
    HOME
@@ -102,20 +101,20 @@ app.post("/register", async (req, res) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      return res.send("All fields required");
+      return res.send("Completá todos los campos");
     }
 
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res.send("Email already exists");
+      return res.send("Ya existe una cuenta con ese correo electrónico");
     }
 
     const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*]).{6,}$/;
 
     if (!passwordRegex.test(password)) {
       return res.send(
-        "Password must contain 6 characters, one number and one special character"
+        "La contraseña debe tener al menos 6 caracteres, un número y un carácter especial (!@#$%^&*)"
       );
     }
 
@@ -132,7 +131,7 @@ app.post("/register", async (req, res) => {
     res.redirect("/login");
   } catch (err) {
     console.log(err);
-    res.send("Register error");
+    res.send("No se pudo crear la cuenta. Intentá nuevamente.");
   }
 });
 
@@ -143,13 +142,13 @@ app.post("/login", async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      return res.status(401).json({ message: "Usuario no encontrado" });
     }
 
     const validPassword = await bcrypt.compare(password, user.password);
 
     if (!validPassword) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res.status(401).json({ message: "Contraseña incorrecta" });
     }
 
     const token = jwt.sign(
@@ -163,7 +162,7 @@ app.post("/login", async (req, res) => {
 
     res.status(200).json({ token });
   } catch (err) {
-    res.status(500).json({ message: "Login error" });
+    res.status(500).json({ message: "No se pudo iniciar sesión. Intentá nuevamente." });
   }
 });
 
@@ -257,6 +256,20 @@ app.use((req, res) => {
 /* =========================
    SERVER
 ========================= */
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+try {
+  if (!process.env.MONGO_URI) throw new Error("Falta MONGO_URI en .env");
+  if (!process.env.JWT_SECRET) throw new Error("Falta JWT_SECRET en .env");
+  if (process.env.MONGO_DNS_SERVERS) {
+    dns.setServers(process.env.MONGO_DNS_SERVERS.split(",").map((server) => server.trim()));
+  }
+  await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 10000 });
+  console.log("✅ Mongo conectado");
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+} catch (err) {
+  const message = err.message.replace(/mongodb(?:\+srv)?:\/\/[^\s]+/g, "[URI oculta]");
+  console.error(`No se pudo iniciar el servidor: ${message}`);
+  await mongoose.disconnect();
+  process.exitCode = 1;
+}

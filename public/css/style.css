@@ -250,6 +250,8 @@ body{
 }
 
 .category-card{
+  text-decoration:none;
+  color:inherit;
   height:100px;
   background:white;
   border:1px solid #ececec;
@@ -265,6 +267,28 @@ body{
 
 .category-card:hover{
   transform:translateY(-4px);
+}
+
+button.category-card{
+  font-family:inherit;
+  color:inherit;
+}
+
+.category-card[aria-pressed="true"]{
+  background:#222;
+  color:white;
+  border-color:#222;
+}
+
+.category-card:focus-visible{
+  outline:2px solid #222;
+  outline-offset:4px;
+}
+
+.filter-status{
+  margin-bottom:24px;
+  color:#666;
+  font-size:13px;
 }
 
 /* =========================
@@ -320,6 +344,17 @@ body{
 
 .product-card:hover{
   transform:translateY(-4px);
+}
+
+.product-link{
+  display:block;
+  text-decoration:none;
+  color:inherit;
+}
+
+.product-link:focus-visible{
+  outline:2px solid #222;
+  outline-offset:4px;
 }
 
 .product-image{

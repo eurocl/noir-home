@@ -1,0 +1,38 @@
+<% gallery.slides.forEach((property, propertyIndex) => {
+  const exterior = ['exterior-bosque', 'exterior-patio', 'paisaje-refugio', 'paisaje-ladera'].includes(property.image);
+  const spaces = [];
+  if (!exterior) spaces.push({ image: property.image + '-fachada', label: 'Fachada', caption: 'Una vista exterior que presenta los volúmenes y materiales de esta propuesta.' });
+  spaces.push({ image: property.image, label: exterior ? 'Fachada' : 'Ambiente original', caption: property.caption });
+  spaces.push(
+    { image: property.image + '-dormitorio', label: 'Dormitorio', caption: 'Un espacio de descanso que conserva la identidad arquitectónica de la propiedad.' },
+    { image: property.image + '-cocina', label: 'Cocina', caption: 'Materiales y líneas simples dan forma a un ambiente para cocinar y compartir.' },
+    { image: property.image + '-bano', label: 'Baño', caption: 'Un espacio íntimo de cuidado personal, con la misma paleta y atmósfera de la casa.' },
+    { image: property.image + '-piscina', label: 'Piscina', caption: 'Agua, vegetación y arquitectura se encuentran en un espacio para disfrutar y descansar.' },
+    { image: property.image + '-patio', label: 'Patio', caption: 'Un lugar de encuentro y contemplación, en conexión con el paisaje.' }
+  );
+%>
+<details class="property-gallery" name="properties-<%= gallery.id %>" <%= propertyIndex === 0 ? 'open' : '' %>>
+  <summary><span><span class="property-label">Propiedad <%= propertyIndex + 1 %></span><strong><%= property.title %></strong></span><span class="property-summary-action">Ver ambientes <span aria-hidden="true">＋</span></span></summary>
+  <div class="architecture-carousel" role="region" aria-roledescription="carrusel" aria-label="<%= property.title %>" tabindex="0">
+    <div class="property-space-picker" role="group" aria-label="Ambientes de <%= property.title %>">
+      <% spaces.forEach((space, index) => { %>
+      <button type="button" data-slide="<%= index %>" aria-pressed="<%= index === 0 %>" aria-controls="slides-<%= property.image %>"><%= space.label %></button>
+      <% }); %>
+    </div>
+    <div class="architecture-slides" id="slides-<%= property.image %>">
+      <% spaces.forEach((space, index) => { %>
+      <figure class="architecture-slide" role="group" aria-roledescription="diapositiva" aria-label="<%= index + 1 %> de <%= spaces.length %>: <%= space.label %>" <%= index ? 'hidden' : '' %>>
+        <img src="/images/architecture/<%= space.image %>.png" alt="<%= space.label %> de <%= property.title %> — arquitectura brutalista <%= gallery.night ? 'con luz turquesa y vegetación' : gallery.landscape ? 'en gris grafito y paisaje verde' : 'en hormigón natural' %>" width="1536" height="1024" loading="lazy">
+        <figcaption><h3><%= space.label %> · <%= property.title %></h3><p><%= space.caption %></p></figcaption>
+      </figure>
+      <% }); %>
+    </div>
+    <div class="architecture-controls">
+      <span class="property-concept">Visualizaciones conceptuales</span>
+      <button type="button" data-direction="-1" aria-label="Imagen anterior de <%= property.title %>" aria-controls="slides-<%= property.image %>">←</button>
+      <p class="architecture-counter" aria-live="polite" aria-atomic="true">1 / <%= spaces.length %></p>
+      <button type="button" data-direction="1" aria-label="Imagen siguiente de <%= property.title %>" aria-controls="slides-<%= property.image %>">→</button>
+    </div>
+  </div>
+</details>
+<% }); %>

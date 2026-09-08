@@ -55,7 +55,7 @@ document.addEventListener(
             );
 
             alert(
-              "Login successful"
+              "Iniciaste sesión correctamente"
             );
 
             window.location.href =
@@ -74,7 +74,7 @@ document.addEventListener(
           console.log(err);
 
           alert(
-            "Login error"
+            "No se pudo iniciar sesión. Intentá nuevamente."
           );
 
         }

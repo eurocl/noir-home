@@ -75,7 +75,11 @@ app.use("/products", productsRoutes);
 /* =========================
    HOME
 ========================= */
-app.get("/", async (req, res) => {
+app.get("/", (req, res) => {
+  res.render("pages/catalog", { userId: req.session.userId, userName: req.session.userName });
+});
+
+app.get("/bazar", async (req, res) => {
   try {
     const products = await Product.find();
 

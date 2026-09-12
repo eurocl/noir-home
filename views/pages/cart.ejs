@@ -18,15 +18,7 @@
 <body>
 
   <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="logo">Noir Home</div>
-
-    <div class="nav-links">
-      <a href="/">Inicio</a>
-      <a href="/cart">Carrito</a>
-      <a href="/logout">Cerrar sesión</a>
-    </div>
-  </nav>
+  <%- include("navigation") %>
 
   <!-- CART -->
   <section class="cart-page">
@@ -132,7 +124,7 @@
 
       <div class="empty-cart">
         <h2>Your cart is empty</h2>
-        <a href="/">Continue Shopping</a>
+        <a href="/bazar">Seguir comprando</a>
       </div>
 
     <% } %>

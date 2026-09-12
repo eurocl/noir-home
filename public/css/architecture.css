@@ -13,6 +13,8 @@
 .architecture-slide{margin:0}
 .architecture-slide[hidden]{display:none}
 .architecture-slide img{width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;display:block;background:#d5d5ca}
+.architecture-slide img.property-reference-image{object-fit:cover;object-position:center}
+#gallery-casa-mineral .architecture-slide img{aspect-ratio:3/2}
 .architecture-slide figcaption{padding:24px 0 0}
 .architecture-slide h3{font-size:17px;font-weight:500;margin:0 0 8px}
 .architecture-slide figcaption p{font-size:13px;line-height:1.7;color:#64685e;margin:0}

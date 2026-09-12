@@ -41,35 +41,7 @@
 
   <!-- NAVBAR -->
 
-  <nav class="navbar">
-
-    <div class="logo">
-      Noir Home
-    </div>
-
-    <div class="nav-links">
-
-      <a href="/">Inicio</a>
-
-      <a href="/cart">Carrito</a>
-
-      <% if(userId){ %>
-
-        <a href="/logout">
-          Cerrar sesión
-        </a>
-
-      <% } else { %>
-
-        <a href="/login">
-          Ingresar
-        </a>
-
-      <% } %>
-
-    </div>
-
-  </nav>
+  <%- include("navigation") %>
 
   <!-- PRODUCT DETAIL -->
 

@@ -1,0 +1,14 @@
+<nav class="navbar" aria-label="Navegación principal">
+  <a class="logo" href="/">Noir Home</a>
+  <div class="nav-links">
+    <a href="/">Arquitectura</a>
+    <a href="/bazar">Bazar</a>
+    <a href="/about">Sobre nosotros</a>
+    <a href="/cart">Carrito</a>
+    <% if ((typeof userId !== 'undefined' && userId) || (typeof userName !== 'undefined' && userName)) { %>
+      <a href="/logout">Cerrar sesión</a>
+    <% } else { %>
+      <a href="/login">Ingresar</a>
+    <% } %>
+  </div>
+</nav>

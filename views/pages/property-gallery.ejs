@@ -1,6 +1,7 @@
 <% gallery.slides.forEach((property, propertyIndex) => {
   const exterior = ['exterior-bosque', 'exterior-patio', 'paisaje-refugio', 'paisaje-ladera'].includes(property.image);
-  const spaces = [];
+  const spaces = property.spaces ? [...property.spaces] : [];
+  if (!property.spaces) {
   if (!exterior) spaces.push({ image: property.image + '-fachada', label: 'Fachada', caption: 'Una vista exterior que presenta los volúmenes y materiales de esta propuesta.' });
   spaces.push({ image: property.image, label: exterior ? 'Fachada' : 'Ambiente original', caption: property.caption });
   spaces.push(
@@ -10,6 +11,7 @@
     { image: property.image + '-piscina', label: 'Piscina', caption: 'Agua, vegetación y arquitectura se encuentran en un espacio para disfrutar y descansar.' },
     { image: property.image + '-patio', label: 'Patio', caption: 'Un lugar de encuentro y contemplación, en conexión con el paisaje.' }
   );
+  }
 %>
 <details class="property-gallery" name="properties-<%= gallery.id %>" <%= propertyIndex === 0 ? 'open' : '' %>>
   <summary><span><span class="property-label">Propiedad <%= propertyIndex + 1 %></span><strong><%= property.title %></strong></span><span class="property-summary-action">Ver ambientes <span aria-hidden="true">＋</span></span></summary>
@@ -22,7 +24,7 @@
     <div class="architecture-slides" id="slides-<%= property.image %>">
       <% spaces.forEach((space, index) => { %>
       <figure class="architecture-slide" role="group" aria-roledescription="diapositiva" aria-label="<%= index + 1 %> de <%= spaces.length %>: <%= space.label %>" <%= index ? 'hidden' : '' %>>
-        <img src="/images/architecture/<%= space.image %>.png" alt="<%= space.label %> de <%= property.title %> — arquitectura brutalista <%= gallery.night ? 'con luz turquesa y vegetación' : gallery.landscape ? 'en gris grafito y paisaje verde' : 'en hormigón natural' %>" width="1536" height="1024" loading="lazy">
+        <img src="/images/architecture/<%= space.image %>.<%= space.extension || 'png' %>" alt="<%= space.alt || (space.label + ' de ' + property.title) %>" width="1536" height="1024" loading="lazy" class="<%= space.reference ? 'property-reference-image' : '' %>">
         <figcaption><h3><%= space.label %> · <%= property.title %></h3><p><%= space.caption %></p></figcaption>
       </figure>
       <% }); %>

@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Noir Home</title>
+  <title>Noir Home | Bazar</title>
 
   <link rel="stylesheet" href="/css/style.css">
 
@@ -18,21 +18,7 @@
 <body>
 
   <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="logo">Noir Home</div>
-
-    <div class="nav-links">
-      <a href="/">Inicio</a>
-      <a href="/catalog">Catálogo</a>
-      <a href="/cart">Carrito</a>
-
-      <% if(userId){ %>
-        <a href="/logout">Cerrar sesión</a>
-      <% } else { %>
-        <a href="/login">Ingresar</a>
-      <% } %>
-    </div>
-  </nav>
+  <%- include("navigation") %>
 
   <!-- HERO -->
   <section class="hero">
@@ -56,8 +42,6 @@
       <button type="button" class="category-card" data-filter="<%= category.toLowerCase() %>"
               aria-pressed="<%= category === 'All' %>" aria-controls="product-grid"><%= category %></button>
     <% }) %>
-
-    <a href="/about" class="category-card">Sobre nosotros</a>
 
   </section>
 

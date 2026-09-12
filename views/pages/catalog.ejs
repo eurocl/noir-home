@@ -10,7 +10,7 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Noir Home | Catálogo</title>
+  <title>Noir Home | Arquitectura</title>
 
   <link
     rel="stylesheet"
@@ -40,33 +40,7 @@
 
   <!-- NAVBAR -->
 
-  <nav class="navbar">
-
-    <div class="logo">
-      Noir Home
-    </div>
-
-    <div class="nav-links">
-
-      <a href="/">Inicio</a>
-
-      <a href="/catalog">Catálogo</a>
-
-      <a href="/cart">Carrito</a>
-
-      <% if(userId){ %>
-
-        <a href="/logout">Cerrar sesión</a>
-
-      <% } else { %>
-
-        <a href="/login">Ingresar</a>
-
-      <% } %>
-
-    </div>
-
-  </nav>
+  <%- include("navigation") %>
 
 <main class="architecture">
   <header class="architecture-intro">
@@ -99,6 +73,16 @@
       { image: 'paisaje-refugio', title: 'Refugio en el paisaje', caption: 'Volúmenes sobrios se abren al verde del bosque y la pradera.', alt: 'Residencia brutalista minimalista de hormigón gris oscuro entre praderas verdes y montañas boscosas' },
       { image: 'paisaje-ladera', title: 'Habitar la ladera', caption: 'Terrazas de hormigón oscuro acompañan el relieve natural del valle.', alt: 'Edificio brutalista de hormigón grafito integrado en una ladera verde con vistas al bosque' }
     ]}
+    ,{ id: 'casa-mineral', number: '06', title: 'Piedra, luz y suavidad', text: 'La memoria de la piedra se encuentra con el hormigón y el acero. Una casa de tonos minerales donde la luz difusa y los textiles de apariencia algodonosa suavizan la fuerza de los materiales.', slides: [
+      { image: 'casa-mineral', title: 'Casa Mineral', spaces: [
+        { image: 'casa-mineral-fachada-horizontal', label: 'Fachada', caption: 'Una envolvente translúcida entre muros y columnas de piedra.', alt: 'Fachada de referencia con vidrio translúcido y restos de muros de piedra clara' },
+        { image: 'casa-mineral-cocina-horizontal', label: 'Cocina', caption: 'Acero cepillado, hormigón visto y una isla de piedra en bruto.', alt: 'Cocina de referencia con muebles metálicos e isla monolítica de piedra' },
+        { image: 'casa-mineral-estar', label: 'Descanso', caption: 'Sofás mullidos y almohadones de apariencia algodonosa entre piedra y luz natural.' },
+        { image: 'casa-mineral-dormitorio', label: 'Dormitorio', caption: 'Una cama voluminosa, con acolchado esponjoso y almohadas suaves como nubes.' },
+        { image: 'casa-mineral-bano', label: 'Baño', caption: 'Piedra tallada, metal cepillado y toallas de algodón grueso para un espacio sereno.' },
+        { image: 'casa-mineral-patio', label: 'Patio', caption: 'Un rincón abierto al cielo con vegetación y asientos suaves para descansar.' }
+      ]}
+    ]}
   ]; %>
   <% galleries.forEach(gallery => { %>
     <% if (gallery.number === '03') { %>
@@ -114,7 +98,7 @@
       <%- include("property-gallery", { gallery }) %>
     </section>
   <% }); %>
-  <footer class="architecture-footer"><p>Una mirada conectada a la naturaleza.</p><a href="/">Explorar objetos para el hogar <span aria-hidden="true">↗</span></a></footer>
+  <footer class="architecture-footer"><p>Una mirada conectada a la naturaleza.</p><a href="/bazar">Explorar objetos para el hogar <span aria-hidden="true">↗</span></a></footer>
 </main>
 <script src="/js/catalog.js" defer></script>
 </body>

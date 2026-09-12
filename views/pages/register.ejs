@@ -1,77 +1,33 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>Registrarse</title>
-
-  <link
-    rel="stylesheet"
-    href="/css/style.css"
-  >
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noir Home | Crear una cuenta</title>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/auth.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 </head>
-
-<body>
-
-  <form
-    action="/register"
-    method="POST"
-    class="auth-form"
-  >
-
-    <h1>
-      Crear una cuenta
-    </h1>
-
-    <input
-      type="text"
-      name="name"
-      placeholder="Nombre completo"
-      required
-    >
-
-    <input
-      type="email"
-      name="email"
-      placeholder="Correo electrónico"
-      required
-    >
-
-    <input
-      type="password"
-      name="password"
-      placeholder="Contraseña"
-      required
-    >
-
-    <p class="password-info">
-
-      La contraseña debe contener:
-      <br>
-      • Al menos 6 caracteres
-      <br>
-      • 1 número
-      <br>
-      • 1 carácter especial (!@#$%^&*)
-
-    </p>
-
-    <button type="submit">
-
-      Registrarse
-
-    </button>
-
-  </form>
+<body class="auth-page">
+<div class="auth-backdrop" aria-hidden="true"></div>
+<header class="auth-header"><a class="auth-brand" href="/">NOIR HOME</a><a class="auth-back" href="/">Volver a la colección ↗</a></header>
+<main class="auth-main">
+<form class="auth-card " action="/register" method="POST" aria-labelledby="auth-title">
+<p class="auth-eyebrow">Tu espacio en Noir Home</p>
+<h1 id="auth-title">Una nueva forma de habitar.</h1>
+<p class="auth-description">Creá tu cuenta y descubrí nuestra colección.</p>
+<div class="auth-fields">
+<label class="auth-field" for="name">Nombre completo<input id="name" type="text" name="name" placeholder="Tu nombre" autocomplete="name" required></label>
+<label class="auth-field" for="email">Correo electrónico<input id="email" type="email" name="email" placeholder="tu@email.com" autocomplete="email" required></label>
+<label class="auth-field" for="password">Contraseña<input id="password" type="password" name="password" placeholder="Tu contraseña" autocomplete="new-password" minlength="6" aria-describedby="password-help" required></label>
+<p id="password-help" class="auth-help">Usá al menos 6 caracteres, un número y un carácter especial (!@#$%^&amp;*).</p>
+</div>
+<button type="submit">Crear cuenta ↗</button>
+<p class="auth-switch">¿Ya tenés cuenta? <a href="/login">Ingresar</a></p>
+</form>
+</main>
 
 </body>
-
 </html>

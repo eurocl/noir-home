@@ -1,0 +1,5 @@
+Herramienta: image_gen integrada (edición de imagen).
+Imagen original: descarga (39).jpg.
+Prompt:
+Edit target: attached portrait architectural collage. Outpaint the LEFT AND RIGHT sides into a wide landscape 16:9 image for a full-screen website login background, ideally 2560x1440. Preserve the original concrete house, proportions, glazing, warm interiors, stone terrain and fine architectural drawing overlays; do not stretch or deform the building. Extend the pale warm grey sky, rocky landscape and concrete terrace naturally to both sides. Keep the original house in the left-center portion, around 38% of frame width, leaving the right third calm pale architectural negative space for a cream-colored form overlay implemented separately in HTML. Preserve the original editorial architectural visual style, muted mineral tones and diffuse light. No form, UI, new titles or added branding in the generated image.
+Resultado: public/images/auth-architecture-wide.png

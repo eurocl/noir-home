@@ -133,9 +133,9 @@ test("independent HTTP services and website integration without MongoDB writes",
 
 test('each service selects its own database and inventory collection', () => {
   const env = { MONGO_URI: 'mongodb://localhost/source' };
-  assert.equal(serviceDatabase('users', env).dbName, 'noir_users');
-  assert.equal(serviceDatabase('products', env).dbName, 'noir_products');
-  assert.equal(serviceDatabase('stock', env).dbName, 'noir_inventory');
+  assert.equal(serviceDatabase('users', env).dbName, 'noir_usuarios');
+  assert.equal(serviceDatabase('products', env).dbName, 'noir_productos');
+  assert.equal(serviceDatabase('stock', env).dbName, 'noir_inventario');
   assert.equal(serviceDatabase('stock', { ...env, MONGO_STOCK_URI: 'mongodb://localhost/other', MONGO_STOCK_DB: 'custom' }).uri, 'mongodb://localhost/other');
   assert.equal(Inventory.collection.name, 'inventory');
   assert.equal(Product.schema.path('stock'), undefined);

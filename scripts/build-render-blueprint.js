@@ -3,9 +3,9 @@ import fs from 'node:fs';
 const value = (key, value) => ({ key, value });
 const secret = key => ({ key, sync: false });
 const from = (key, name, envVarKey) => ({ key, fromService: { type: 'web', name, envVarKey } });
-const mongo = from('MONGO_URI', 'noir-users', 'MONGO_URI');
-const jwt = from('JWT_SECRET', 'noir-users', 'JWT_SECRET');
-const internal = from('INTERNAL_SERVICE_SECRET', 'noir-stock', 'INTERNAL_SERVICE_SECRET');
+const mongo = from('MONGO_URI', 'noir-usuarios', 'MONGO_URI');
+const jwt = from('JWT_SECRET', 'noir-usuarios', 'JWT_SECRET');
+const internal = from('INTERNAL_SERVICE_SECRET', 'noir-inventario', 'INTERNAL_SERVICE_SECRET');
 const common = [value('NODE_ENV', 'production'), value('NODE_VERSION', '24'), value('SERVICE_TIMEOUT_MS', '180000')];
 const service = (name, startCommand, envVars) => ({
   type: 'web', name, runtime: 'node', plan: 'free',
@@ -13,13 +13,13 @@ const service = (name, startCommand, envVars) => ({
   envVars: [...common, ...envVars],
 });
 const blueprint = { services: [
-  service('noir-users', 'npm run start:users', [secret('MONGO_URI'), secret('JWT_SECRET'), value('MONGO_USERS_DB', 'noir_users')]),
-  service('noir-stock', 'npm run start:stock', [mongo, secret('INTERNAL_SERVICE_SECRET'), value('MONGO_STOCK_DB', 'noir_inventory')]),
-  service('noir-products', 'npm run start:products', [mongo, jwt, internal, value('MONGO_PRODUCTS_DB', 'noir_products'), from('STOCK_SERVICE_URL', 'noir-stock', 'RENDER_EXTERNAL_URL')]),
-  service('noir-web', 'npm start', [mongo, jwt, { key: 'SESSION_SECRET', generateValue: true }, value('CONTENT_ENABLED', 'false'),
-    from('USERS_SERVICE_URL', 'noir-users', 'RENDER_EXTERNAL_URL'),
-    from('PRODUCTS_SERVICE_URL', 'noir-products', 'RENDER_EXTERNAL_URL'),
-    from('STOCK_SERVICE_URL', 'noir-stock', 'RENDER_EXTERNAL_URL'),
+  service('noir-usuarios', 'npm run start:users', [secret('MONGO_URI'), secret('JWT_SECRET'), value('MONGO_USERS_DB', 'noir_usuarios')]),
+  service('noir-inventario', 'npm run start:stock', [mongo, secret('INTERNAL_SERVICE_SECRET'), value('MONGO_STOCK_DB', 'noir_inventario')]),
+  service('noir-productos', 'npm run start:products', [mongo, jwt, internal, value('MONGO_PRODUCTS_DB', 'noir_productos'), from('STOCK_SERVICE_URL', 'noir-inventario', 'RENDER_EXTERNAL_URL')]),
+  service('proyecto-noir', 'npm start', [mongo, jwt, { key: 'SESSION_SECRET', generateValue: true }, value('CONTENT_ENABLED', 'false'),
+    from('USERS_SERVICE_URL', 'noir-usuarios', 'RENDER_EXTERNAL_URL'),
+    from('PRODUCTS_SERVICE_URL', 'noir-productos', 'RENDER_EXTERNAL_URL'),
+    from('STOCK_SERVICE_URL', 'noir-inventario', 'RENDER_EXTERNAL_URL'),
   ]),
 ] };
 // JSON is valid YAML. Keeping this form allows validation with Node alone.

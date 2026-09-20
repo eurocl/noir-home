@@ -1,4 +1,4 @@
-# Noir Home
+# Proyecto Noir
 
 Sitio de objetos para el hogar y catálogo conceptual de arquitectura brutalista, construido con Express, EJS y MongoDB Atlas.
 
@@ -29,9 +29,9 @@ Los tres servicios usan bases distintas en el mismo clúster:
 
 | Servicio | Base por defecto | Colección |
 | --- | --- | --- |
-| Usuarios | `noir_users` | `users` |
-| Productos | `noir_products` | `products` |
-| Stock | `noir_inventory` | `inventory` |
+| Usuarios | `noir_usuarios` | `users` |
+| Productos | `noir_productos` | `products` |
+| Stock | `noir_inventario` | `inventory` |
 
 El stock ya no se almacena en el producto. Cada registro de inventario usa como `_id` el ID de su producto y contiene `stock`. Las variables `MONGO_USERS_DB`, `MONGO_PRODUCTS_DB` y `MONGO_STOCK_DB` seleccionan estas bases. `MONGO_USERS_URI`, `MONGO_PRODUCTS_URI` y `MONGO_STOCK_URI` permiten usar credenciales o clústeres específicos; si se omiten, se usa `MONGO_URI`. Compartir una credencial no impone permisos exclusivos por base: el control de acceso de Atlas se configura por separado.
 

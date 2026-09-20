@@ -2,7 +2,7 @@
   "services": [
     {
       "type": "web",
-      "name": "noir-users",
+      "name": "noir-usuarios",
       "runtime": "node",
       "plan": "free",
       "buildCommand": "npm ci",
@@ -31,13 +31,13 @@
         },
         {
           "key": "MONGO_USERS_DB",
-          "value": "noir_users"
+          "value": "noir_usuarios"
         }
       ]
     },
     {
       "type": "web",
-      "name": "noir-stock",
+      "name": "noir-inventario",
       "runtime": "node",
       "plan": "free",
       "buildCommand": "npm ci",
@@ -60,7 +60,7 @@
           "key": "MONGO_URI",
           "fromService": {
             "type": "web",
-            "name": "noir-users",
+            "name": "noir-usuarios",
             "envVarKey": "MONGO_URI"
           }
         },
@@ -70,13 +70,13 @@
         },
         {
           "key": "MONGO_STOCK_DB",
-          "value": "noir_inventory"
+          "value": "noir_inventario"
         }
       ]
     },
     {
       "type": "web",
-      "name": "noir-products",
+      "name": "noir-productos",
       "runtime": "node",
       "plan": "free",
       "buildCommand": "npm ci",
@@ -99,7 +99,7 @@
           "key": "MONGO_URI",
           "fromService": {
             "type": "web",
-            "name": "noir-users",
+            "name": "noir-usuarios",
             "envVarKey": "MONGO_URI"
           }
         },
@@ -107,7 +107,7 @@
           "key": "JWT_SECRET",
           "fromService": {
             "type": "web",
-            "name": "noir-users",
+            "name": "noir-usuarios",
             "envVarKey": "JWT_SECRET"
           }
         },
@@ -115,19 +115,19 @@
           "key": "INTERNAL_SERVICE_SECRET",
           "fromService": {
             "type": "web",
-            "name": "noir-stock",
+            "name": "noir-inventario",
             "envVarKey": "INTERNAL_SERVICE_SECRET"
           }
         },
         {
           "key": "MONGO_PRODUCTS_DB",
-          "value": "noir_products"
+          "value": "noir_productos"
         },
         {
           "key": "STOCK_SERVICE_URL",
           "fromService": {
             "type": "web",
-            "name": "noir-stock",
+            "name": "noir-inventario",
             "envVarKey": "RENDER_EXTERNAL_URL"
           }
         }
@@ -135,7 +135,7 @@
     },
     {
       "type": "web",
-      "name": "noir-web",
+      "name": "proyecto-noir",
       "runtime": "node",
       "plan": "free",
       "buildCommand": "npm ci",
@@ -158,7 +158,7 @@
           "key": "MONGO_URI",
           "fromService": {
             "type": "web",
-            "name": "noir-users",
+            "name": "noir-usuarios",
             "envVarKey": "MONGO_URI"
           }
         },
@@ -166,7 +166,7 @@
           "key": "JWT_SECRET",
           "fromService": {
             "type": "web",
-            "name": "noir-users",
+            "name": "noir-usuarios",
             "envVarKey": "JWT_SECRET"
           }
         },
@@ -182,7 +182,7 @@
           "key": "USERS_SERVICE_URL",
           "fromService": {
             "type": "web",
-            "name": "noir-users",
+            "name": "noir-usuarios",
             "envVarKey": "RENDER_EXTERNAL_URL"
           }
         },
@@ -190,7 +190,7 @@
           "key": "PRODUCTS_SERVICE_URL",
           "fromService": {
             "type": "web",
-            "name": "noir-products",
+            "name": "noir-productos",
             "envVarKey": "RENDER_EXTERNAL_URL"
           }
         },
@@ -198,7 +198,7 @@
           "key": "STOCK_SERVICE_URL",
           "fromService": {
             "type": "web",
-            "name": "noir-stock",
+            "name": "noir-inventario",
             "envVarKey": "RENDER_EXTERNAL_URL"
           }
         }

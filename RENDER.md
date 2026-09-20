@@ -14,9 +14,9 @@ Crear primero usuarios y stock, luego productos. Al final, actualizar la web exi
 
 | Servicio | Start Command | Variables específicas |
 | --- | --- | --- |
-| Usuarios | `npm run start:users` | `MONGO_USERS_DB=noir_users`, `JWT_SECRET` |
-| Stock | `npm run start:stock` | `MONGO_STOCK_DB=noir_inventory`, `INTERNAL_SERVICE_SECRET` |
-| Productos | `npm run start:products` | `MONGO_PRODUCTS_DB=noir_products`, `JWT_SECRET`, `INTERNAL_SERVICE_SECRET`, `STOCK_SERVICE_URL` |
+| Usuarios | `npm run start:users` | `MONGO_USERS_DB=noir_usuarios`, `JWT_SECRET` |
+| Stock | `npm run start:stock` | `MONGO_STOCK_DB=noir_inventario`, `INTERNAL_SERVICE_SECRET` |
+| Productos | `npm run start:products` | `MONGO_PRODUCTS_DB=noir_productos`, `JWT_SECRET`, `INTERNAL_SERVICE_SECRET`, `STOCK_SERVICE_URL` |
 | Web existente | `npm start` | `JWT_SECRET`, `SESSION_SECRET`, `USERS_SERVICE_URL`, `PRODUCTS_SERVICE_URL`, `STOCK_SERVICE_URL`, `CONTENT_ENABLED=false` |
 
 Todos necesitan `MONGO_URI`, `NODE_ENV=production`, `NODE_VERSION=24` y `SERVICE_TIMEOUT_MS=180000`. Copiar `MONGO_URI` de nuestra configuración local: no usar la conexión del compañero. Mantener exactamente el mismo `JWT_SECRET` en usuarios, productos y web. `INTERNAL_SERVICE_SECRET` debe coincidir en productos y stock; se puede reutilizar el valor local sin mostrarlo ni subirlo al repositorio. Crear un `SESSION_SECRET` aleatorio exclusivo de la web.
@@ -29,7 +29,7 @@ En Atlas → Network Access, autorizar los rangos que Render muestra en **Connec
 
 `render.yaml` define los cuatro servicios Free. Usar **New → Blueprint**, seleccionar el repositorio y revisar el plan antes de confirmar. Se solicitan `MONGO_URI` y `JWT_SECRET` para usuarios, e `INTERNAL_SERVICE_SECRET` para stock. La web genera su propio secreto de sesión. Las demás conexiones y secretos se referencian entre servicios; las URLs usan `RENDER_EXTERNAL_URL`, no la red privada.
 
-Si ya tenés una web con otro nombre, este Blueprint puede crear una web adicional. Para conservar la URL existente, usá la configuración manual anterior o adaptá el nombre `noir-web` en el generador al nombre exacto del servicio existente y revisá los cambios propuestos por Render. No aplicar a ciegas sobre el despliegue actual. El Blueprint está en JSON, un formato válido de YAML. Se regenera con `node scripts/build-render-blueprint.js`.
+Si ya tenés una web con otro nombre, este Blueprint puede crear una web adicional. Para conservar la URL existente, usá la configuración manual anterior o adaptá el nombre `proyecto-noir` en el generador al nombre exacto del servicio existente y revisá los cambios propuestos por Render. No aplicar a ciegas sobre el despliegue actual. El Blueprint está en JSON, un formato válido de YAML. Se regenera con `node scripts/build-render-blueprint.js`.
 
 ## Comprobar el despliegue
 

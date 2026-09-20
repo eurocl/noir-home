@@ -10,7 +10,6 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
   },
 
   password: {
@@ -23,6 +22,9 @@ const userSchema = new mongoose.Schema({
   timestamps: true,
 
 });
+
+// Preserve legacy username-only accounts while protecting email registrations.
+userSchema.index({ email: 1 }, { unique: true, partialFilterExpression: { email: { $type: "string" } } });
 
 const User = mongoose.model(
   "User",

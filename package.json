@@ -4,9 +4,16 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-  "start": "node app.js",
-  "dev": "nodemon app.js"
-},
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "start:users": "node services/users/server.js",
+    "start:products": "node services/products/server.js",
+    "start:stock": "node services/stock/server.js",
+    "start:all": "node scripts/start-services.js",
+    "test:services": "node --test tests/services.test.js",
+    "test": "node --test tests/*.test.js",
+    "check:render": "node scripts/build-render-blueprint.js --check"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

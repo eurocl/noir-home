@@ -12,6 +12,14 @@ document.addEventListener(
       async (e) => {
 
         e.preventDefault();
+        const button = form.querySelector('button[type="submit"]');
+        if (button.disabled) return;
+        const originalLabel = button.textContent;
+        button.disabled = true;
+        button.textContent = "Iniciando sesión…";
+        const waiting = setTimeout(() => {
+          button.textContent = "Conectando, esperá un momento…";
+        }, 5000);
 
         const email =
           document.querySelector(
@@ -77,6 +85,10 @@ document.addEventListener(
             "No se pudo iniciar sesión. Intentá nuevamente."
           );
 
+        } finally {
+          clearTimeout(waiting);
+          button.disabled = false;
+          button.textContent = originalLabel;
         }
 
       }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8">
@@ -93,6 +93,73 @@
     </div>
 
   </section>
+
+  <!-- PERSONAS -->
+
+  <section class="people-section">
+
+    <div class="section-title">
+
+      <p>Opiniones</p>
+
+      <h2>Diseño contado por personas</h2>
+
+    </div>
+
+
+    <div class="people-grid">
+
+      <% if (people && people.length > 0) { %>
+
+        <% people.forEach(person => { %>
+
+          <div class="person-card">
+
+            <div class="person-image">
+
+              <img
+                src="<%= person.imagen %>"
+                alt="<%= person.nombre %>"
+                width="100"
+                height="100"
+                loading="lazy"
+              >
+
+            </div>
+
+
+            <div class="person-info">
+
+              <h3>
+                <%= person.nombre %>
+              </h3>
+
+              <p class="person-role">
+                <%= person.role %>
+              </p>
+
+              <p class="person-comment">
+                "<%= person.comentario %>"
+              </p>
+
+            </div>
+
+          </div>
+
+        <% }) %>
+
+      <% } else { %>
+
+        <p>
+          <%= typeof contentUnavailable !== 'undefined' && contentUnavailable ? 'Las opiniones no están disponibles temporalmente.' : 'No hay opiniones disponibles.' %>
+        </p>
+
+      <% } %>
+
+    </div>
+
+  </section>
+
 
   <!-- FILTER SCRIPT -->
   <script src="/js/home.js" defer></script>

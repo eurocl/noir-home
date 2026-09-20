@@ -4,23 +4,40 @@ import dotenv from "dotenv";
 import session from "express-session";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import dns from "node:dns";
+import contentConnection from "./config/content-database.js";
 
-import Product from "./models/Product.js";
-import User from "./models/User.js";
 import Cart from "./models/Cart.js";
+import Person from "./models/Person.js";
+import Architecture from "./models/Architecture.js";
 
-import productsRoutes from "./routes/products.js";
+import productsRoutes from "./routes/product-gateway.js";
+import { requestService } from "./services/client.js";
+import { listenOptions, validateServiceUrls } from "./services/deployment.js";
+import peopleRoutes from "./routes/people.js";
+import architectureRoutes from "./routes/architecture.js";
 
 dotenv.config({ path: fileURLToPath(new URL(".env", import.meta.url)) });
 
 const app = express();
 
+async function loadContent(model) {
+  if (contentConnection.readyState !== 1) return [];
+  try { return await model.find(); }
+  catch { return []; }
+}
+app.use((req, res, next) => {
+  res.locals.contentUnavailable = contentConnection.readyState !== 1;
+  next();
+});
+
 app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3000;
+app.get("/health", (req, res) => {
+  const ready = mongoose.connection.readyState === 1;
+  res.status(ready ? 200 : 503).json({ service: "web", ready });
+});
 
 /* =========================
    MIDDLEWARES
@@ -38,7 +55,8 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: false,
+      secure: process.env.RENDER === "true",
+      sameSite: "lax",
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24,
     },
@@ -48,8 +66,21 @@ app.use(
 /* =========================
    SECURITY
 ========================= */
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
 
+        "img-src": [
+          "'self'",
+          "data:",
+          "https:"
+        ],
+      },
+    },
+  })
+);
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -67,6 +98,12 @@ app.set("views", fileURLToPath(new URL("views", import.meta.url)));
    ROUTES
 ========================= */
 app.use("/products", productsRoutes);
+app.use("/people", peopleRoutes);
+app.use("/architecture", architectureRoutes);
+app.get("/stock", async (req, res) => {
+  try { res.json(await requestService("stock", "/stock")); }
+  catch (error) { res.status(error.status || 500).json({ message: error.message }); }
+});
 
 /* =========================
    MONGO
@@ -75,22 +112,41 @@ app.use("/products", productsRoutes);
 /* =========================
    HOME
 ========================= */
-app.get("/", (req, res) => {
-  res.render("pages/catalog", { userId: req.session.userId, userName: req.session.userName });
-});
-
-app.get("/bazar", async (req, res) => {
+app.get("/", async (req, res) => {
   try {
-    const products = await Product.find();
+    const architectureItems = await loadContent(Architecture);
 
-    res.render("pages/home", {
-      products,
+    res.render("pages/catalog", {
+      architectureItems,
       userId: req.session.userId,
       userName: req.session.userName,
     });
   } catch (err) {
     console.log(err);
-    res.send("Error loading products");
+    res.status(500).send("No se pudo cargar la arquitectura. Intentá nuevamente.");
+  }
+});
+
+app.get("/bazar", async (req, res) => {
+  try {
+
+    const products = await requestService("products", "/products");
+
+    const people = await loadContent(Person);
+
+    res.render("pages/home", {
+      products,
+      people,
+      userId: req.session.userId,
+      userName: req.session.userName,
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).send("No se pudo cargar el bazar. Intentá nuevamente.");
+
   }
 });
 
@@ -102,71 +158,23 @@ app.get("/register", (req, res) => res.render("pages/register"));
 
 app.post("/register", async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-
-    if (!name || !email || !password) {
-      return res.send("Completá todos los campos");
-    }
-
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return res.send("Ya existe una cuenta con ese correo electrónico");
-    }
-
-    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*]).{6,}$/;
-
-    if (!passwordRegex.test(password)) {
-      return res.send(
-        "La contraseña debe tener al menos 6 caracteres, un número y un carácter especial (!@#$%^&*)"
-      );
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = new User({
-      name,
-      email,
-      password: hashedPassword,
-    });
-
-    await newUser.save();
-
+    await requestService("users", "/users/register", { method: "POST", body: req.body });
     res.redirect("/login");
-  } catch (err) {
-    console.log(err);
-    res.send("No se pudo crear la cuenta. Intentá nuevamente.");
+  } catch (error) {
+    res.status(error.status || 500).type("text").send(error.message);
   }
 });
 
 app.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(401).json({ message: "Usuario no encontrado" });
-    }
-
-    const validPassword = await bcrypt.compare(password, user.password);
-
-    if (!validPassword) {
-      return res.status(401).json({ message: "Contraseña incorrecta" });
-    }
-
-    const token = jwt.sign(
-      { userId: user._id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
-    req.session.userId = user._id;
+    const { token, user } = await requestService("users", "/users/login", { method: "POST", body: req.body });
+    await new Promise((resolve, reject) => req.session.regenerate(error => error ? reject(error) : resolve()));
+    req.session.userId = user.id;
     req.session.userName = user.name;
-
-    res.status(200).json({ token });
-  } catch (err) {
-    res.status(500).json({ message: "No se pudo iniciar sesión. Intentá nuevamente." });
+    await new Promise((resolve, reject) => req.session.save(error => error ? reject(error) : resolve()));
+    res.json({ token });
+  } catch (error) {
+    res.status(error.status || 500).json({ message: error.status ? error.message : "No se pudo iniciar sesión" });
   }
 });
 
@@ -180,6 +188,7 @@ app.post("/cart/add/:id", async (req, res) => {
     const userId = req.session.userId;
     const productId = req.params.id;
 
+    await requestService("products", `/products/${encodeURIComponent(productId)}`);
     let cart = await Cart.findOne({ userId });
 
     if (!cart) {
@@ -211,9 +220,19 @@ app.get("/cart", async (req, res) => {
       return res.redirect("/login");
     }
 
-    const cart = await Cart.findOne({
-      userId: req.session.userId,
-    }).populate("products.productId");
+    const savedCart = await Cart.findOne({ userId: req.session.userId }).lean();
+    const cart = savedCart ? {
+      ...savedCart,
+      products: await Promise.all(savedCart.products.map(async item => {
+        try {
+          const product = await requestService("products", `/products/${encodeURIComponent(item.productId)}`);
+          return { ...item, productId: product };
+        } catch (error) {
+          if (error.status === 404) return { ...item, productId: null };
+          throw error;
+        }
+      })),
+    } : null;
 
     res.render("pages/cart", {
       cart: cart || { products: [] },
@@ -243,11 +262,19 @@ app.get("/about", (req, res) => {
   });
 });
 
-app.get("/catalog", (req, res) => {
-  res.render("pages/catalog", {
-    userId: req.session.userId,
-    userName: req.session.userName,
-  });
+app.get("/catalog", async (req, res) => {
+  try {
+    const architectureItems = await loadContent(Architecture);
+
+    res.render("pages/catalog", {
+      architectureItems,
+      userId: req.session.userId,
+      userName: req.session.userName,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("No se pudo cargar la arquitectura. Intentá nuevamente.");
+  }
 });
 
 /* =========================
@@ -260,16 +287,25 @@ app.use((req, res) => {
 /* =========================
    SERVER
 ========================= */
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
 try {
   if (!process.env.MONGO_URI) throw new Error("Falta MONGO_URI en .env");
   if (!process.env.JWT_SECRET) throw new Error("Falta JWT_SECRET en .env");
+  if (process.env.RENDER === "true" && !process.env.SESSION_SECRET) throw new Error("Falta SESSION_SECRET");
+  validateServiceUrls(["users", "products", "stock"]);
+  const listener = listenOptions(PORT);
   if (process.env.MONGO_DNS_SERVERS) {
     dns.setServers(process.env.MONGO_DNS_SERVERS.split(",").map((server) => server.trim()));
   }
   await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 10000 });
-  console.log("✅ Mongo conectado");
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+  if (process.env.MONGO_CONTENT_URI && process.env.CONTENT_ENABLED !== "false") {
+    contentConnection.openUri(process.env.MONGO_CONTENT_URI, { serverSelectionTimeoutMS: 10000 })
+      .then(() => console.log("Mongo de contenido conectado"))
+      .catch(() => console.warn("Contenido externo no disponible; usuarios y productos siguen independientes."));
+  }
+  console.log("Mongo del carrito conectado");
+  app.listen(listener.port, listener.host, () => {
+    console.log(`🚀 Server running on ${listener.host}:${listener.port}`);
   });
 } catch (err) {
   const message = err.message.replace(/mongodb(?:\+srv)?:\/\/[^\s]+/g, "[URI oculta]");
@@ -277,3 +313,6 @@ try {
   await mongoose.disconnect();
   process.exitCode = 1;
 }
+}
+
+export default app;

@@ -78,7 +78,11 @@
         $<%= product.price %>
       </p>
 
-      <% if(product.stock > 0){ %>
+      <% if (!inventory) { %>
+
+        <p class="stock">No se pudo consultar la disponibilidad. Intentá nuevamente.</p>
+
+      <% } else if(inventory.stock > 0){ %>
 
         <p class="stock in-stock">
           In Stock

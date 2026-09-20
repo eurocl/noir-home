@@ -52,6 +52,73 @@
     </div>
     <span class="architecture-note">Edificios modelo · Visualizaciones conceptuales</span>
   </header>
+    <section class="mongo-architecture">
+
+      <div class="mongo-architecture-heading">
+
+        <p class="architecture-eyebrow">
+          Dreamcore · Brutalismo
+        </p>
+
+        <h2>
+          Espacios & atmósferas
+        </h2>
+
+        <p>
+          Una selección de espacios donde el brutalismo y la imaginación crean nuevas atmósferas.
+        </p>
+
+      </div>
+
+
+      <div class="mongo-architecture-grid">
+
+        <% if (architectureItems && architectureItems.length > 0) { %>
+
+          <% architectureItems.forEach(item => { %>
+
+            <article class="mongo-architecture-card">
+
+              <div class="mongo-architecture-image">
+
+                <img
+                  src="<%= item.imagen %>" loading="lazy"
+                  alt="<%= item['título'] %>"
+                >
+
+              </div>
+
+              <div class="mongo-architecture-info">
+
+                <p class="mongo-architecture-style">
+                  <%= item.estilo %>
+                </p>
+
+                <h3>
+                  <%= item["título"] %>
+                </h3>
+
+                <p class="mongo-architecture-description">
+                  <%= item["descripción"] %>
+                </p>
+
+              </div>
+
+            </article>
+
+          <% }) %>
+
+        <% } else { %>
+
+          <p>
+            <%= typeof contentUnavailable !== 'undefined' && contentUnavailable ? 'Las referencias adicionales no están disponibles temporalmente.' : 'No hay proyectos de arquitectura disponibles.' %>
+          </p>
+
+        <% } %>
+
+      </div>
+
+    </section>
   <% const galleries = [
     { id: 'edificios', number: '01', title: 'La fuerza de la materia', text: 'Volúmenes de hormigón, terrazas abiertas y patios verdes. Edificios modelo que exploran el encuentro entre la presencia de la arquitectura y la suavidad del paisaje.', slides: [
       { image: 'exterior-bosque', title: 'Entre árboles', caption: 'Terrazas profundas y hormigón a la vista en diálogo con el bosque.', alt: 'Edificio brutalista de hormigón con terrazas rodeado de bosque' },

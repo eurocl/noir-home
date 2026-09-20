@@ -3,6 +3,7 @@ import dns from "node:dns";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import Product from "../models/Product.js";
+import { serviceDatabase } from "../services/database-config.js";
 
 dotenv.config({ path: new URL("../.env", import.meta.url), quiet: true });
 if (process.env.MONGO_DNS_SERVERS) {
@@ -57,7 +58,8 @@ const translations = new Map([
 ]);
 
 try {
-  await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 10000 });
+  const { uri, dbName } = serviceDatabase("products");
+  await mongoose.connect(uri, { dbName, serverSelectionTimeoutMS: 10000 });
   const products = await Product.find().lean();
   const pending = products.filter(product => translations.has(product.description));
   const unknown = products.filter(product => !translations.has(product.description) && ![...translations.values()].includes(product.description));

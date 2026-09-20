@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 import Product from "./models/Product.js";
+import { serviceDatabase } from "./services/database-config.js";
 
 dotenv.config();
 
@@ -9,9 +10,8 @@ async function fixCategory(){
 
   try{
 
-    await mongoose.connect(
-      process.env.MONGO_URI
-    );
+    const { uri, dbName } = serviceDatabase("products");
+    await mongoose.connect(uri, { dbName });
 
     await Product.updateOne(
       { name: "Noir Lamp" },

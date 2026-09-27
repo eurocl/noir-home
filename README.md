@@ -2,6 +2,8 @@
 
 Sitio de objetos para el hogar y catálogo conceptual de arquitectura brutalista, construido con Express, EJS y MongoDB Atlas.
 
+Para estudiar y presentar el proyecto: [guía de arquitectura, arranque y exposición](docs/GUIA-EXPOSICION.md) y [tres diagramas visuales para abrir en el navegador](docs/DIAGRAMAS.html).
+
 ## Iniciar el proyecto
 
 1. Instalá Node.js 24 y ejecutá `npm ci` desde esta carpeta.
@@ -37,15 +39,13 @@ El stock ya no se almacena en el producto. Cada registro de inventario usa como 
 
 Crear un producto inicializa su inventario mediante una API interna de stock. Las operaciones internas requieren `INTERNAL_SERVICE_SECRET`, que nunca se envía al navegador. Reintentar la inicialización conserva las existencias ya registradas. Eliminar un producto elimina también su inventario; ante errores se intenta compensar la operación y se devuelve un error. Son dos escrituras en servicios distintos, sin una transacción distribuida: si ambos servicios fallan durante la compensación, se registra el ID para revisar consistencia. No se agregó un sistema de reservas ni descuento de stock al carrito.
 
-## Migración de las bases
+## Datos y comprobaciones
 
-La migración del 20/09/2026 copió 7 usuarios, 44 productos y 44 registros de inventario, conservando IDs, contraseñas almacenadas y cantidades. Los 3 carritos permanecen en la base de origen y la web resuelve sus productos por HTTP. Tres usuarios antiguos solo tienen `username`; se conservaron íntegros y el índice único de email se aplica únicamente a documentos con correo. La pantalla de acceso actual sigue usando email y no convierte automáticamente esas cuentas antiguas.
+Usuarios, productos e inventario usan las bases indicadas arriba. Los carritos continúan en la base de origen y resuelven los productos por HTTP. Las colecciones antiguas conservadas en Atlas no se utilizan para usuarios y productos y no son respaldos actualizados. Esta limpieza local no elimina bases remotas.
 
-`node scripts/migrate-service-databases.js --check` revisa conflictos sin escribir. `--apply` requiere detener los servicios locales, respalda datos y configuración, inserta solo documentos faltantes, compara el contenido completo, comprueba que el origen no cambió y activa las bases en `.env`. Nunca sobrescribe registros diferentes ni elimina el origen. Los respaldos BSON Extended JSON conservan ObjectIds y fechas y están en `backups/database-separation-*/`, junto con `original.env`, índices y un manifiesto de verificación. Son privados y están excluidos de Git.
+Las cuentas antiguas que solo tienen username se conservan; el login actual requiere email.
 
-Las colecciones originales de `test` se conservaron como referencia de la migración; usuarios y productos ya no las usan. No son un respaldo actualizado de las nuevas bases. No vuelvas a apuntar un servicio a ellas después de generar datos nuevos sin reconciliar antes los cambios. El script de migración aborta si encuentra diferencias en destinos existentes, para evitar reemplazar datos posteriores.
-
-`npm run test:services` comprueba por HTTP registro, login, perfiles, productos, stock, carrito y fallas de servicios con repositorios simulados, sin escribir en MongoDB. `ms-validation` sigue siendo opcional y se inicia por separado desde su carpeta con un puerto distinto a 3000–3003.
+`npm test` comprueba los servicios y la configuración de despliegue con repositorios simulados, sin escribir en MongoDB. `node scripts/check-databases.js` permite comprobar las conexiones configuradas.
 
 ## Catálogo
 
@@ -53,7 +53,7 @@ Diez propuestas arquitectónicas en tres estilos, con galerías individuales de 
 
 Los archivos de imágenes están en `public/images/architecture`. Las galerías se definen en `views/pages/catalog.ejs` y se presentan con `views/pages/property-gallery.ejs`.
 
-Las descripciones de los productos se almacenan en MongoDB. El script `scripts/translate-descriptions.js` permite aplicar las traducciones del catálogo original y guarda una copia local antes de modificarlo.
+Las descripciones de los productos se almacenan en MongoDB. 
 
 ## Arquitectura y opiniones desde MongoDB
 
@@ -61,8 +61,8 @@ La portada y `/catalog` agregan referencias de la colección `Arquitectura`, con
 
 El bazar (`/bazar`) muestra opiniones de la colección `Personas`, con los campos `nombre`, `role`, `imagen` y `comentario`. Ambas colecciones conservan exactamente esos nombres, incluidas las mayúsculas y las tildes de sus campos. Las rutas de consulta `/architecture` y `/people` devuelven sus registros en JSON.
 
-Si las colecciones están vacías, las páginas muestran un mensaje de disponibilidad. La integración no crea ni migra documentos: arquitectura y opiniones deben existir en la base configurada en `MONGO_CONTENT_URI`. Las imágenes pueden usar rutas locales o direcciones HTTPS. Esta conexión queda en el servidor web; `ms-validation` sigue siendo un servicio separado que valida tokens sin acceder a MongoDB.
+Si las colecciones están vacías, las páginas muestran un mensaje de disponibilidad. La integración no crea ni migra documentos: arquitectura y opiniones deben existir en la base configurada en `MONGO_CONTENT_URI`. Las imágenes pueden usar rutas locales o direcciones HTTPS. Esta conexión queda en el servidor web.
 
 ## Configuración privada
 
-No subir `.env`, copias de datos ni `node_modules`. Las dependencias se instalan con `npm ci`. El servicio opcional `ms-validation` tiene sus propias dependencias y necesita `PORT` y `JWT_SECRET` en su entorno; el secreto JWT debe coincidir con el del servidor principal.
+No subir `.env`, copias de datos ni `node_modules`. Las dependencias se instalan con `npm ci`.

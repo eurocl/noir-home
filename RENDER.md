@@ -6,7 +6,7 @@ El repositorio publicado es `eurocl/noir-home`. Los cuatro servicios usan el mis
 
 Subir los cambios revisados de la copia `.github-publish` al repositorio. La carpeta de trabajo `noir-home-main` contiene la versión editable; `.github-publish` es la copia Git preparada para publicar. No subir `.env`, `node_modules` ni `backups`.
 
-Si el servicio actual tiene despliegue automático, **no actualizar su rama de producción hasta configurar las dependencias y variables nuevas**, porque la web ya consulta los otros servicios. Se puede publicar primero en otra rama, crear los tres servicios desde esa rama y actualizar la web al final. El código local preparado todavía no modifica tu panel de Render.
+Si el servicio actual tiene despliegue automático, **no actualizar su rama de producción hasta configurar las dependencias y variables nuevas**, porque la web ya consulta los otros servicios. Se puede publicar primero en otra rama, crear los tres servicios desde esa rama y actualizar la web al final. Los cambios locales no actualizan Render hasta publicarlos y desplegarlos.
 
 ## Opción recomendada si ya existe la web: configuración manual
 

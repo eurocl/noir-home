@@ -2,139 +2,6 @@
   "services": [
     {
       "type": "web",
-      "name": "noir-usuarios",
-      "runtime": "node",
-      "plan": "free",
-      "buildCommand": "npm ci",
-      "startCommand": "npm run start:users",
-      "healthCheckPath": "/health",
-      "envVars": [
-        {
-          "key": "NODE_ENV",
-          "value": "production"
-        },
-        {
-          "key": "NODE_VERSION",
-          "value": "24"
-        },
-        {
-          "key": "SERVICE_TIMEOUT_MS",
-          "value": "180000"
-        },
-        {
-          "key": "MONGO_URI",
-          "sync": false
-        },
-        {
-          "key": "JWT_SECRET",
-          "sync": false
-        },
-        {
-          "key": "MONGO_USERS_DB",
-          "value": "noir_usuarios"
-        }
-      ]
-    },
-    {
-      "type": "web",
-      "name": "noir-inventario",
-      "runtime": "node",
-      "plan": "free",
-      "buildCommand": "npm ci",
-      "startCommand": "npm run start:stock",
-      "healthCheckPath": "/health",
-      "envVars": [
-        {
-          "key": "NODE_ENV",
-          "value": "production"
-        },
-        {
-          "key": "NODE_VERSION",
-          "value": "24"
-        },
-        {
-          "key": "SERVICE_TIMEOUT_MS",
-          "value": "180000"
-        },
-        {
-          "key": "MONGO_URI",
-          "fromService": {
-            "type": "web",
-            "name": "noir-usuarios",
-            "envVarKey": "MONGO_URI"
-          }
-        },
-        {
-          "key": "INTERNAL_SERVICE_SECRET",
-          "sync": false
-        },
-        {
-          "key": "MONGO_STOCK_DB",
-          "value": "noir_inventario"
-        }
-      ]
-    },
-    {
-      "type": "web",
-      "name": "noir-productos",
-      "runtime": "node",
-      "plan": "free",
-      "buildCommand": "npm ci",
-      "startCommand": "npm run start:products",
-      "healthCheckPath": "/health",
-      "envVars": [
-        {
-          "key": "NODE_ENV",
-          "value": "production"
-        },
-        {
-          "key": "NODE_VERSION",
-          "value": "24"
-        },
-        {
-          "key": "SERVICE_TIMEOUT_MS",
-          "value": "180000"
-        },
-        {
-          "key": "MONGO_URI",
-          "fromService": {
-            "type": "web",
-            "name": "noir-usuarios",
-            "envVarKey": "MONGO_URI"
-          }
-        },
-        {
-          "key": "JWT_SECRET",
-          "fromService": {
-            "type": "web",
-            "name": "noir-usuarios",
-            "envVarKey": "JWT_SECRET"
-          }
-        },
-        {
-          "key": "INTERNAL_SERVICE_SECRET",
-          "fromService": {
-            "type": "web",
-            "name": "noir-inventario",
-            "envVarKey": "INTERNAL_SERVICE_SECRET"
-          }
-        },
-        {
-          "key": "MONGO_PRODUCTS_DB",
-          "value": "noir_productos"
-        },
-        {
-          "key": "STOCK_SERVICE_URL",
-          "fromService": {
-            "type": "web",
-            "name": "noir-inventario",
-            "envVarKey": "RENDER_EXTERNAL_URL"
-          }
-        }
-      ]
-    },
-    {
-      "type": "web",
       "name": "proyecto-noir",
       "runtime": "node",
       "plan": "free",
@@ -143,36 +10,20 @@
       "healthCheckPath": "/health",
       "envVars": [
         {
-          "key": "NODE_ENV",
-          "value": "production"
+          "key": "MONGO_URI",
+          "sync": false
+        },
+        {
+          "key": "JWT_SECRET",
+          "sync": false
+        },
+        {
+          "key": "SESSION_SECRET",
+          "sync": false
         },
         {
           "key": "NODE_VERSION",
           "value": "24"
-        },
-        {
-          "key": "SERVICE_TIMEOUT_MS",
-          "value": "180000"
-        },
-        {
-          "key": "MONGO_URI",
-          "fromService": {
-            "type": "web",
-            "name": "noir-usuarios",
-            "envVarKey": "MONGO_URI"
-          }
-        },
-        {
-          "key": "JWT_SECRET",
-          "fromService": {
-            "type": "web",
-            "name": "noir-usuarios",
-            "envVarKey": "JWT_SECRET"
-          }
-        },
-        {
-          "key": "SESSION_SECRET",
-          "generateValue": true
         },
         {
           "key": "CONTENT_ENABLED",
@@ -180,27 +31,15 @@
         },
         {
           "key": "USERS_SERVICE_URL",
-          "fromService": {
-            "type": "web",
-            "name": "noir-usuarios",
-            "envVarKey": "RENDER_EXTERNAL_URL"
-          }
+          "value": "https://noir-users.onrender.com"
         },
         {
           "key": "PRODUCTS_SERVICE_URL",
-          "fromService": {
-            "type": "web",
-            "name": "noir-productos",
-            "envVarKey": "RENDER_EXTERNAL_URL"
-          }
+          "value": "https://noir-products.onrender.com"
         },
         {
           "key": "STOCK_SERVICE_URL",
-          "fromService": {
-            "type": "web",
-            "name": "noir-inventario",
-            "envVarKey": "RENDER_EXTERNAL_URL"
-          }
+          "value": "https://noir-stock.onrender.com"
         }
       ]
     }

@@ -1,0 +1,24 @@
+.noir-about{max-width:1280px;margin:auto;padding:145px 40px 70px;color:#292d27}
+.about-intro{max-width:850px;padding-bottom:50px}
+.noir-about .eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#68705d}
+.noir-about h1,.noir-about h2,.noir-about h3{font-family:'Cormorant Garamond',serif;font-weight:400}
+.noir-about h1{font-size:clamp(44px,6vw,78px);line-height:1.08;margin:22px 0 28px}
+.noir-about h2{font-size:clamp(32px,4vw,48px);line-height:1.15;margin:18px 0}
+.noir-about h3{font-size:36px;margin:12px 0}
+.noir-about h4{font-size:14px;font-weight:500;margin:18px 0}
+.noir-about p{font-size:14px;line-height:1.8;color:#586052}
+.noir-about section{border-top:1px solid #cccfc5;padding-top:36px}
+.architect-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px;margin-top:38px}
+.architect-grid article{border-top:2px solid #7b826f;padding-top:20px;display:flex;flex-direction:column}
+.noir-about a{color:#35472d;text-underline-offset:5px;overflow-wrap:anywhere}
+.architect-grid a{margin-top:auto;padding:12px 0;font-size:13px}
+.about-contact{margin-top:60px;display:grid;grid-template-columns:1fr 1fr;gap:70px}
+.about-contact .contact-help{font-size:12px;margin-top:24px}
+#contact-form{display:flex;flex-direction:column;gap:10px}
+#contact-form label{font-size:13px;margin-top:10px}
+#contact-form input,#contact-form textarea{width:100%;box-sizing:border-box;font:inherit;font-size:15px;padding:13px;border:1px solid #929a88;background:#fafaf7;color:#292d27;border-radius:3px}
+#contact-form textarea{resize:vertical}
+#contact-form button{padding:15px 22px;margin-top:10px;background:#343e30;border:1px solid #343e30;color:white;font:inherit;cursor:pointer;align-self:flex-start}
+#contact-form button:hover{background:#20291e}
+.noir-about :focus-visible{outline:3px solid #667b54;outline-offset:4px}
+@media(max-width:760px){.noir-about{padding:120px 22px 50px}.architect-grid,.about-contact{grid-template-columns:1fr;gap:32px}.about-intro{padding-bottom:35px}.about-contact{margin-top:40px}}

@@ -10,7 +10,7 @@ import contentConnection from "./config/content-database.js";
 
 import Cart from "./models/Cart.js";
 import Person from "./models/Person.js";
-import Architecture from "./models/Architecture.js";
+import { loadArchitecture } from "./services/architecture.js";
 
 import productsRoutes from "./routes/product-gateway.js";
 import { requestService } from "./services/client.js";
@@ -114,10 +114,10 @@ app.get("/stock", async (req, res) => {
 ========================= */
 app.get("/", async (req, res) => {
   try {
-    const architectureItems = await loadContent(Architecture);
+    const architecture = await loadArchitecture();
 
     res.render("pages/catalog", {
-      architectureItems,
+      ...architecture,
       userId: req.session.userId,
       userName: req.session.userName,
     });
@@ -264,10 +264,10 @@ app.get("/about", (req, res) => {
 
 app.get("/catalog", async (req, res) => {
   try {
-    const architectureItems = await loadContent(Architecture);
+    const architecture = await loadArchitecture();
 
     res.render("pages/catalog", {
-      architectureItems,
+      ...architecture,
       userId: req.session.userId,
       userName: req.session.userName,
     });
@@ -299,7 +299,7 @@ try {
   }
   await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 10000 });
   if (process.env.MONGO_CONTENT_URI && process.env.CONTENT_ENABLED !== "false") {
-    contentConnection.openUri(process.env.MONGO_CONTENT_URI, { serverSelectionTimeoutMS: 10000 })
+    await contentConnection.openUri(process.env.MONGO_CONTENT_URI, { dbName: "Hijos", serverSelectionTimeoutMS: 10000 })
       .then(() => console.log("Mongo de contenido conectado"))
       .catch(() => console.warn("Contenido externo no disponible; usuarios y productos siguen independientes."));
   }

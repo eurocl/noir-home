@@ -1,97 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>
-    Sobre nosotros | Proyecto Noir
-  </title>
-
-  <link
-    rel="stylesheet"
-    href="/css/style.css"
-  >
-
-  <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com"
-  >
-
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  >
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap"
-    rel="stylesheet"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre nosotros | Proyecto Noir</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/about.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
-
 <body>
-
-  <!-- NAVBAR -->
-
-  <%- include("navigation") %>
-
-  <!-- ABOUT SECTION -->
-
-  <section class="about-page">
-
-    <!-- LEFT -->
-
-    <div class="about-content">
-
-      <p class="about-tag">
-        About Proyecto Noir
-      </p>
-
-      <h1>
-        Designed For <br>
-        Timeless Living
-      </h1>
-
-      <p class="about-text">
-
-        Proyecto Noir was created with a vision
-        to bring elegant, timeless, and curated
-        interior pieces into modern spaces.
-
-        We believe every object inside a home
-        should combine beauty, functionality,
-        and calm aesthetics.
-
-        Inspired by Scandinavian minimalism
-        and contemporary luxury, our collections
-        are carefully selected to transform
-        everyday living into an elevated experience.
-
-      </p>
-
+<%- include("navigation") %>
+<main class="noir-about">
+  <header class="about-intro">
+    <p class="eyebrow">Sobre el proyecto</p>
+    <h1>Arquitectura y objetos<br>para el hogar.</h1>
+    <p>Somos Adán y Cid, estudiantes de desarrollo de sistemas. Creamos Noir para reunir propuestas de arquitectura y productos para el hogar. Nos interesan los materiales a la vista, los espacios simples y la relación entre una casa y su entorno.</p>
+  </header>
+  <section aria-labelledby="references-title">
+    <p class="eyebrow">Nuestra inspiración</p>
+    <h2 id="references-title">Tres formas de pensar el espacio</h2>
+    <p>La inspiración: Tadao Ando, Luciano Kruk y Peter Zumthor. Sus distintas miradas sobre la luz, los materiales y el paisaje dan forma a la identidad de Noir. Las imágenes de las galerías son visualizaciones conceptuales del proyecto.</p>
+    <div class="architect-grid">
+      <article>
+        <p class="eyebrow">01 · Japón</p><h3>Tadao Ando</h3>
+        <h4>Hormigón y luz natural</h4>
+        <p>Arquitecto japonés reconocido con el Premio Pritzker en 1995. Sus edificios combinan hormigón visto, formas geométricas y entradas de luz que cambian la percepción de los espacios.</p>
+        <p>Nos interesa cómo incorpora la luz y el viento a la arquitectura. Esa relación aparece en los patios y ambientes abiertos que exploramos en Noir.</p>
+        <a href="https://www.pritzkerprize.com/laureates/1995" target="_blank" rel="noopener noreferrer">Conocer su trabajo ↗</a>
+      </article>
+      <article>
+        <p class="eyebrow">02 · Argentina</p><h3>Luciano Kruk</h3>
+        <h4>Casas entre los árboles</h4>
+        <p>Arquitecto argentino cuya obra incluye viviendas de hormigón visto y vidrio vinculadas al paisaje. En Casa entre los árboles, la vivienda se eleva para aprovechar las vistas del entorno.</p>
+        <p>Es una referencia cercana para nuestras casas en el bosque: materiales simples, grandes aberturas y una conexión directa con el exterior.</p>
+        <a href="https://www.archdaily.com/929219/house-in-the-trees-luciano-kruk" target="_blank" rel="noopener noreferrer">Ver Casa entre los árboles ↗</a>
+      </article>
+      <article>
+        <p class="eyebrow">03 · Suiza</p><h3>Peter Zumthor</h3>
+        <h4>Piedra, agua y textura</h4>
+        <p>Arquitecto suizo y ganador del Premio Pritzker en 2009. Su trabajo presta atención a los materiales y a la experiencia de recorrer un lugar. Las Termas de Vals combinan piedra, agua y luz.</p>
+        <p>Lo tomamos como referencia para Casa Mineral y los ambientes de agua de Noir, donde las texturas y la iluminación tienen un papel central.</p>
+        <a href="https://www.pritzkerprize.com/laureates/2009" target="_blank" rel="noopener noreferrer">Conocer su trabajo ↗</a>
+      </article>
     </div>
-
-    <!-- RIGHT -->
-
-    <div class="about-image">
-
-      <img
-        src="/images/foto.jpg"
-        alt="Proyecto Noir"
-      >
-
-    </div>
-
   </section>
-
+  <section class="about-contact" aria-labelledby="contact-title">
+    <div>
+      <p class="eyebrow">Contacto</p><h2 id="contact-title">Escribinos</h2>
+      <p>Si tenés una consulta o querés compartir una idea sobre Noir, podés contactarnos.</p>
+      <a href="mailto:home.designe.info@gmail.com">home.designe.info@gmail.com</a>
+      <p id="contact-help" class="contact-help">El formulario abre tu aplicación de correo con el mensaje preparado. Desde ahí podés revisarlo y enviarlo. También podés copiar nuestra dirección y escribirnos desde tu correo web.</p>
+    </div>
+    <form id="contact-form" action="/about#contact-title" method="get" aria-describedby="contact-help">
+      <label for="contact-name">Nombre</label>
+      <input id="contact-name" type="text" autocomplete="name" required maxlength="100">
+      <label for="contact-email">Correo electrónico</label>
+      <input id="contact-email" type="email" autocomplete="email" required maxlength="254">
+      <label for="contact-message">Mensaje</label>
+      <textarea id="contact-message" rows="6" required minlength="10" maxlength="1500"></textarea>
+      <button type="submit">Preparar correo</button>
+      <p id="contact-status" role="status" aria-live="polite"></p>
+      <noscript>Activá JavaScript para preparar el mensaje o escribí directamente a home.designe.info@gmail.com.</noscript>
+    </form>
+  </section>
+</main>
+<script src="/js/contact.js" defer></script>
 </body>
-
 </html>

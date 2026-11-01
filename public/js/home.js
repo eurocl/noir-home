@@ -15,8 +15,8 @@ function filterProducts(button) {
   categoryButtons.forEach((item) => {
     item.setAttribute("aria-pressed", String(item === button));
   });
-  const label = category === "all" ? "All categories" : button.textContent.trim();
-  filterStatus.textContent = `${label} · ${count} ${count === 1 ? "product" : "products"}`;
+  const label = category === "all" ? "Todas las categorías" : button.textContent.trim();
+  filterStatus.textContent = `${label} · ${count} ${count === 1 ? "producto" : "productos"}`;
   emptyCategory.hidden = count !== 0;
 }
 

@@ -17,40 +17,36 @@
 
 <body>
 
-  <!-- NAVBAR -->
   <%- include("navigation") %>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-overlay">
-      <p class="hero-subtitle">Timeless Interior Objects</p>
+      <p class="hero-subtitle">Productos para el hogar</p>
 
       <h1>
-        Una mirada conectada a la naturaleza para encontrar paz
+        Encontrá algo para tu casa
       </h1>
 
       <a href="#products" class="hero-button">
-        Explorar colección
+        Ver productos
       </a>
     </div>
   </section>
 
-  <!-- CATEGORIES -->
   <section class="categories">
 
-    <% ['All', 'Living', 'Bedroom', 'Bathroom', 'Kitchen', 'Lighting'].forEach(category => { %>
+    <% [['All','Todos'], ['Living','Living'], ['Bedroom','Dormitorio'], ['Bathroom','Baño'], ['Kitchen','Cocina'], ['Lighting','Iluminación']].forEach(([category, label]) => { %>
       <button type="button" class="category-card" data-filter="<%= category.toLowerCase() %>"
-              aria-pressed="<%= category === 'All' %>" aria-controls="product-grid"><%= category %></button>
+              aria-pressed="<%= category === 'All' %>" aria-controls="product-grid"><%= label %></button>
     <% }) %>
 
   </section>
 
-  <!-- PRODUCTS -->
   <section class="products-section" id="products">
 
     <div class="section-title">
-      <p>Curated Collection</p>
-      <h2>Featured Products</h2>
+      <p>Bazar</p>
+      <h2>Nuestros productos</h2>
     </div>
 
     <p id="filter-status" class="filter-status" role="status"></p>
@@ -62,7 +58,6 @@
         <div class="product-card"
              data-category="<%= (product.category || '').toLowerCase().trim() %>">
 
-          <!-- LINK AL DETALLE -->
           <a href="/products/<%= product._id %>" class="product-link">
 
             <div class="product-image">
@@ -70,14 +65,13 @@
             </div>
 
             <div class="product-info">
-              <p class="category"><%= product.category || 'Uncategorized' %></p>
+              <p class="category"><%= product.category || 'Sin categoría' %></p>
               <h3><%= product.name %></h3>
               <p class="price">$<%= product.price %></p>
             </div>
 
           </a>
 
-          <!-- BOTÓN ADD TO CART -->
           <% if(userId){ %>
             <form action="/cart/add/<%= product._id %>" method="POST">
               <button type="submit" class="add-cart-btn">
@@ -94,18 +88,16 @@
 
   </section>
 
-  <!-- PERSONAS -->
-
+  <% if (typeof contentUnavailable !== 'undefined' && !contentUnavailable && people && people.length > 0) { %>
   <section class="people-section">
 
     <div class="section-title">
 
       <p>Opiniones</p>
 
-      <h2>Diseño contado por personas</h2>
+      <h2>Opiniones</h2>
 
     </div>
-
 
     <div class="people-grid">
 
@@ -126,7 +118,6 @@
               >
 
             </div>
-
 
             <div class="person-info">
 
@@ -159,9 +150,8 @@
     </div>
 
   </section>
+<% } %>
 
-
-  <!-- FILTER SCRIPT -->
   <script src="/js/home.js" defer></script>
 
 </body>

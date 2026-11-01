@@ -38,125 +38,29 @@
 
 <body>
 
-  <!-- NAVBAR -->
-
   <%- include("navigation") %>
 
 <main class="architecture">
   <header class="architecture-intro">
     <p class="architecture-eyebrow">Propiedades · Arquitectura · Naturaleza</p>
-    <h1>Habitar lo esencial.</h1>
+    <h1>Casas y ambientes.</h1>
     <div class="architecture-intro-copy">
-      <p>Edificios de carácter brutalista, pensados desde la calma del minimalismo. El hormigón a la vista, las formas puras y la luz natural proponen una manera de habitar en conexión con el entorno.</p>
-      <p>Una selección conceptual de propiedades donde la arquitectura deja espacio a lo importante: la naturaleza, el silencio y la vida cotidiana.</p>
+      <p>Una selección de casas e interiores de estilo brutalista y minimalista.</p>
+      <p>Abrí una propiedad para recorrer sus ambientes: cocina, dormitorio, baño y espacios exteriores.</p>
     </div>
     <span class="architecture-note">Edificios modelo · Visualizaciones conceptuales</span>
   </header>
-    <section class="mongo-architecture">
-
-      <div class="mongo-architecture-heading">
-
-        <p class="architecture-eyebrow">
-          Dreamcore · Brutalismo
-        </p>
-
-        <h2>
-          Espacios & atmósferas
-        </h2>
-
-        <p>
-          Una selección de espacios donde el brutalismo y la imaginación crean nuevas atmósferas.
-        </p>
-
-      </div>
-
-
-      <div class="mongo-architecture-grid">
-
-        <% if (architectureItems && architectureItems.length > 0) { %>
-
-          <% architectureItems.forEach(item => { %>
-
-            <article class="mongo-architecture-card">
-
-              <div class="mongo-architecture-image">
-
-                <img
-                  src="<%= item.imagen %>" loading="lazy"
-                  alt="<%= item['título'] %>"
-                >
-
-              </div>
-
-              <div class="mongo-architecture-info">
-
-                <p class="mongo-architecture-style">
-                  <%= item.estilo %>
-                </p>
-
-                <h3>
-                  <%= item["título"] %>
-                </h3>
-
-                <p class="mongo-architecture-description">
-                  <%= item["descripción"] %>
-                </p>
-
-              </div>
-
-            </article>
-
-          <% }) %>
-
-        <% } else { %>
-
-          <p>
-            <%= typeof contentUnavailable !== 'undefined' && contentUnavailable ? 'Las referencias adicionales no están disponibles temporalmente.' : 'No hay proyectos de arquitectura disponibles.' %>
-          </p>
-
-        <% } %>
-
-      </div>
-
-    </section>
-  <% const galleries = [
-    { id: 'edificios', number: '01', title: 'La fuerza de la materia', text: 'Volúmenes de hormigón, terrazas abiertas y patios verdes. Edificios modelo que exploran el encuentro entre la presencia de la arquitectura y la suavidad del paisaje.', slides: [
-      { image: 'exterior-bosque', title: 'Entre árboles', caption: 'Terrazas profundas y hormigón a la vista en diálogo con el bosque.', alt: 'Edificio brutalista de hormigón con terrazas rodeado de bosque' },
-      { image: 'exterior-patio', title: 'Un patio para encontrarse', caption: 'Un vacío central donde la vegetación acompaña la vida compartida.', alt: 'Edificio de viviendas de hormigón alrededor de un patio arbolado' }
-    ]},
-    { id: 'interiores', number: '02', title: 'Espacio para la calma', text: 'Interiores que encuentran su expresión en lo esencial. Materiales honestos, una paleta serena y aperturas al exterior permiten que la luz y la naturaleza sean protagonistas.', slides: [
-      { image: 'interior-luz', title: 'La luz como material', caption: 'Una sala abierta al paisaje, con texturas naturales y líneas simples.', alt: 'Interior minimalista de doble altura con una gran ventana hacia el bosque' },
-      { image: 'interior-patio', title: 'Naturaleza hacia adentro', caption: 'Un patio interior transforma el recorrido en una pausa cotidiana.', alt: 'Galería de hormigón con banco de madera y patio interior plantado' }
-    ]},
-    { id: 'jardines-nocturnos', number: '03', night: true, title: 'Jardines de luz', text: 'Pequeños paisajes interiores enmarcados por luz turquesa. El musgo, los árboles y el hormigón crean refugios para detenerse y contemplar.', slides: [
-      { image: 'nocturno-jardin', title: 'Un bosque enmarcado', caption: 'Un estar íntimo frente a un jardín que ilumina la noche.', alt: 'Estar de hormigón oscuro frente a un jardín de musgo con iluminación turquesa' },
-      { image: 'nocturno-refugio', title: 'Un rincón para detenerse', caption: 'Vegetación, una luz cálida y la calma de un espacio recogido.', alt: 'Rincón de lectura con banco de hormigón y jardín de helechos iluminado en azul' }
-    ]},
-    { id: 'reflejos-nocturnos', number: '04', night: true, title: 'Reflejos y silencio', text: 'La luz recorre el agua y dibuja caminos entre sombras. Espacios minimalistas donde cada reflejo prolonga la presencia de la naturaleza.', slides: [
-      { image: 'nocturno-agua', title: 'El jardín sobre el agua', caption: 'Un espejo de agua recoge el brillo azul y la silueta de las plantas.', alt: 'Espejo de agua en un interior brutalista con jardín y reflejos de luz cian' },
-      { image: 'nocturno-pasaje', title: 'Camino a la calma', caption: 'Un recorrido de hormigón que termina en un pequeño paisaje vivo.', alt: 'Pasaje de hormigón oscuro hacia un patio con árbol, musgo y luz turquesa' }
-    ]}
-    ,{ id: 'paisajes-verdes', number: '05', landscape: true, title: 'Entre el gris y lo verde', text: 'Arquitectura brutalista que encuentra su equilibrio en el paisaje. Hormigón en tonos grafito, líneas esenciales y vegetación libre para habitar cerca de la naturaleza.', slides: [
-      { image: 'paisaje-refugio', title: 'Refugio en el paisaje', caption: 'Volúmenes sobrios se abren al verde del bosque y la pradera.', alt: 'Residencia brutalista minimalista de hormigón gris oscuro entre praderas verdes y montañas boscosas' },
-      { image: 'paisaje-ladera', title: 'Habitar la ladera', caption: 'Terrazas de hormigón oscuro acompañan el relieve natural del valle.', alt: 'Edificio brutalista de hormigón grafito integrado en una ladera verde con vistas al bosque' }
-    ]}
-    ,{ id: 'casa-mineral', number: '06', title: 'Piedra, luz y suavidad', text: 'La memoria de la piedra se encuentra con el hormigón y el acero. Una casa de tonos minerales donde la luz difusa y los textiles de apariencia algodonosa suavizan la fuerza de los materiales.', slides: [
-      { image: 'casa-mineral', title: 'Casa Mineral', spaces: [
-        { image: 'casa-mineral-fachada-horizontal', label: 'Fachada', caption: 'Una envolvente translúcida entre muros y columnas de piedra.', alt: 'Fachada de referencia con vidrio translúcido y restos de muros de piedra clara' },
-        { image: 'casa-mineral-cocina-horizontal', label: 'Cocina', caption: 'Acero cepillado, hormigón visto y una isla de piedra en bruto.', alt: 'Cocina de referencia con muebles metálicos e isla monolítica de piedra' },
-        { image: 'casa-mineral-estar', label: 'Descanso', caption: 'Sofás mullidos y almohadones de apariencia algodonosa entre piedra y luz natural.' },
-        { image: 'casa-mineral-dormitorio', label: 'Dormitorio', caption: 'Una cama voluminosa, con acolchado esponjoso y almohadas suaves como nubes.' },
-        { image: 'casa-mineral-bano', label: 'Baño', caption: 'Piedra tallada, metal cepillado y toallas de algodón grueso para un espacio sereno.' },
-        { image: 'casa-mineral-patio', label: 'Patio', caption: 'Un rincón abierto al cielo con vegetación y asientos suaves para descansar.' }
-      ]}
-    ]}
-  ]; %>
+  <% if (architectureUnavailable) { %>
+    <p role="status">No pudimos consultar la base de arquitectura. Mostramos la copia local de las galerías.</p>
+  <% } else if (!galleries.length) { %>
+    <p>No hay propiedades cargadas todavía.</p>
+  <% } %>
   <% galleries.forEach(gallery => { %>
     <% if (gallery.number === '03') { %>
       <header class="night-intro" id="naturaleza-nocturna">
         <p class="architecture-eyebrow">Atmósferas nocturnas · Jardines interiores</p>
-        <h2>Naturaleza en la penumbra.</h2>
-        <p>El azul ilumina lo vivo. Una exploración de interiores brutalistas donde la vegetación, el agua y la luz transforman la oscuridad en un lugar de paz.</p>
+        <h2>Interiores nocturnos.</h2>
+        <p>Ambientes con jardines interiores e iluminación nocturna.</p>
         <span class="architecture-note">Visualizaciones conceptuales inspiradas en un jardín de luz azul</span>
       </header>
     <% } %>
@@ -165,7 +69,7 @@
       <%- include("property-gallery", { gallery }) %>
     </section>
   <% }); %>
-  <footer class="architecture-footer"><p>Una mirada conectada a la naturaleza.</p><a href="/bazar">Explorar objetos para el hogar <span aria-hidden="true">↗</span></a></footer>
+  <footer class="architecture-footer"><p>Seguí recorriendo Noir.</p><a href="/bazar">Explorar objetos para el hogar <span aria-hidden="true">↗</span></a></footer>
 </main>
 <script src="/js/catalog.js" defer></script>
 </body>

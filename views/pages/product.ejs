@@ -39,11 +39,7 @@
 
 <body>
 
-  <!-- NAVBAR -->
-
   <%- include("navigation") %>
-
-  <!-- PRODUCT DETAIL -->
 
   <section class="product-detail">
 
@@ -63,7 +59,7 @@
     <div class="detail-info">
 
       <p class="detail-category">
-        <%= product.category || "No Category" %>
+        <%= product.category || "Sin categoría" %>
       </p>
 
       <h1>
@@ -85,13 +81,13 @@
       <% } else if(inventory.stock > 0){ %>
 
         <p class="stock in-stock">
-          In Stock
+          Disponible
         </p>
 
       <% } else { %>
 
         <p class="stock out-stock">
-          Out of Stock
+          Sin stock
         </p>
 
       <% } %>

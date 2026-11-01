@@ -1,0 +1,151 @@
+[
+  {
+    "id": "edificios",
+    "number": "01",
+    "title": "Edificios y patios",
+    "text": "Volúmenes de hormigón, terrazas abiertas y patios verdes. Edificios modelo que exploran el encuentro entre la presencia de la arquitectura y la suavidad del paisaje.",
+    "slides": [
+      {
+        "image": "exterior-bosque",
+        "title": "Entre árboles",
+        "caption": "Terrazas profundas y hormigón a la vista en diálogo con el bosque.",
+        "alt": "Edificio brutalista de hormigón con terrazas rodeado de bosque"
+      },
+      {
+        "image": "exterior-patio",
+        "title": "Un patio para encontrarse",
+        "caption": "Un vacío central donde la vegetación acompaña la vida compartida.",
+        "alt": "Edificio de viviendas de hormigón alrededor de un patio arbolado"
+      }
+    ]
+  },
+  {
+    "id": "interiores",
+    "number": "02",
+    "title": "Interiores",
+    "text": "Interiores que encuentran su expresión en lo esencial. Materiales honestos, una paleta serena y aperturas al exterior permiten que la luz y la naturaleza sean protagonistas.",
+    "slides": [
+      {
+        "image": "interior-luz",
+        "title": "La luz como material",
+        "caption": "Una sala abierta al paisaje, con texturas naturales y líneas simples.",
+        "alt": "Interior minimalista de doble altura con una gran ventana hacia el bosque"
+      },
+      {
+        "image": "interior-patio",
+        "title": "Naturaleza hacia adentro",
+        "caption": "Un patio interior transforma el recorrido en una pausa cotidiana.",
+        "alt": "Galería de hormigón con banco de madera y patio interior plantado"
+      }
+    ]
+  },
+  {
+    "id": "jardines-nocturnos",
+    "number": "03",
+    "night": true,
+    "title": "Jardines de luz",
+    "text": "Pequeños paisajes interiores enmarcados por luz turquesa. El musgo, los árboles y el hormigón crean refugios para detenerse y contemplar.",
+    "slides": [
+      {
+        "image": "nocturno-jardin",
+        "title": "Un bosque enmarcado",
+        "caption": "Un estar íntimo frente a un jardín que ilumina la noche.",
+        "alt": "Estar de hormigón oscuro frente a un jardín de musgo con iluminación turquesa"
+      },
+      {
+        "image": "nocturno-refugio",
+        "title": "Un rincón para detenerse",
+        "caption": "Vegetación, una luz cálida y la calma de un espacio recogido.",
+        "alt": "Rincón de lectura con banco de hormigón y jardín de helechos iluminado en azul"
+      }
+    ]
+  },
+  {
+    "id": "reflejos-nocturnos",
+    "number": "04",
+    "night": true,
+    "title": "Agua y recorridos",
+    "text": "La luz recorre el agua y dibuja caminos entre sombras. Espacios minimalistas donde cada reflejo prolonga la presencia de la naturaleza.",
+    "slides": [
+      {
+        "image": "nocturno-agua",
+        "title": "El jardín sobre el agua",
+        "caption": "Un espejo de agua recoge el brillo azul y la silueta de las plantas.",
+        "alt": "Espejo de agua en un interior brutalista con jardín y reflejos de luz cian"
+      },
+      {
+        "image": "nocturno-pasaje",
+        "title": "Camino a la calma",
+        "caption": "Un recorrido de hormigón que termina en un pequeño paisaje vivo.",
+        "alt": "Pasaje de hormigón oscuro hacia un patio con árbol, musgo y luz turquesa"
+      }
+    ]
+  },
+  {
+    "id": "paisajes-verdes",
+    "number": "05",
+    "landscape": true,
+    "title": "Casas en el paisaje",
+    "text": "Arquitectura brutalista que encuentra su equilibrio en el paisaje. Hormigón en tonos grafito, líneas esenciales y vegetación libre para habitar cerca de la naturaleza.",
+    "slides": [
+      {
+        "image": "paisaje-refugio",
+        "title": "Refugio en el paisaje",
+        "caption": "Volúmenes sobrios se abren al verde del bosque y la pradera.",
+        "alt": "Residencia brutalista minimalista de hormigón gris oscuro entre praderas verdes y montañas boscosas"
+      },
+      {
+        "image": "paisaje-ladera",
+        "title": "Habitar la ladera",
+        "caption": "Terrazas de hormigón oscuro acompañan el relieve natural del valle.",
+        "alt": "Edificio brutalista de hormigón grafito integrado en una ladera verde con vistas al bosque"
+      }
+    ]
+  },
+  {
+    "id": "casa-mineral",
+    "number": "06",
+    "title": "Casa Mineral",
+    "text": "La memoria de la piedra se encuentra con el hormigón y el acero. Una casa de tonos minerales donde la luz difusa y los textiles de apariencia algodonosa suavizan la fuerza de los materiales.",
+    "slides": [
+      {
+        "image": "casa-mineral",
+        "title": "Casa Mineral",
+        "spaces": [
+          {
+            "image": "casa-mineral-fachada-horizontal",
+            "label": "Fachada",
+            "caption": "Una envolvente translúcida entre muros y columnas de piedra.",
+            "alt": "Fachada de referencia con vidrio translúcido y restos de muros de piedra clara"
+          },
+          {
+            "image": "casa-mineral-cocina-horizontal",
+            "label": "Cocina",
+            "caption": "Acero cepillado, hormigón visto y una isla de piedra en bruto.",
+            "alt": "Cocina de referencia con muebles metálicos e isla monolítica de piedra"
+          },
+          {
+            "image": "casa-mineral-estar",
+            "label": "Descanso",
+            "caption": "Sofás mullidos y almohadones de apariencia algodonosa entre piedra y luz natural."
+          },
+          {
+            "image": "casa-mineral-dormitorio",
+            "label": "Dormitorio",
+            "caption": "Una cama voluminosa, con acolchado esponjoso y almohadas suaves como nubes."
+          },
+          {
+            "image": "casa-mineral-bano",
+            "label": "Baño",
+            "caption": "Piedra tallada, metal cepillado y toallas de algodón grueso para un espacio sereno."
+          },
+          {
+            "image": "casa-mineral-patio",
+            "label": "Patio",
+            "caption": "Un rincón abierto al cielo con vegetación y asientos suaves para descansar."
+          }
+        ]
+      }
+    ]
+  }
+]

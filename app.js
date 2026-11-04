@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import session from "express-session";
+import { persistentSession } from "./config/session.js";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -50,19 +50,7 @@ app.use(express.static(fileURLToPath(new URL("public", import.meta.url))));
 /* =========================
    SESSION
 ========================= */
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "noirhome_secret",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.RENDER === "true",
-      sameSite: "lax",
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24,
-    },
-  })
-);
+app.use(persistentSession);
 
 /* =========================
    SECURITY
@@ -197,6 +185,7 @@ app.post("/cart/add/:id", async (req, res) => {
     const productId = req.params.id;
 
     await requestService("products", `/products/${encodeURIComponent(productId)}`);
+    const inventory = await requestService("stock", `/stock/${encodeURIComponent(productId)}`);
     let cart = await Cart.findOne({ userId });
 
     if (!cart) {
@@ -207,6 +196,7 @@ app.post("/cart/add/:id", async (req, res) => {
       (item) => item.productId.toString() === productId
     );
 
+    if ((existingProduct?.quantity || 0) >= inventory.stock) return res.status(409).send("No hay stock suficiente para agregar otra unidad.");
     if (existingProduct) {
       existingProduct.quantity += 1;
     } else {
@@ -218,8 +208,30 @@ app.post("/cart/add/:id", async (req, res) => {
     res.redirect("/cart");
   } catch (err) {
     console.log(err);
-    res.send("Cart error");
+    res.status(err.status || 500).send("No se pudo agregar el producto al carrito. Intentá nuevamente.");
   }
+});
+
+app.post('/cart/:action/:id', async (req, res) => {
+  if (!req.session.userId) return res.redirect('/login');
+  const { action, id } = req.params;
+  if (!['increase', 'decrease', 'remove'].includes(action)) return res.sendStatus(404);
+  if (!mongoose.isObjectIdOrHexString(id)) return res.status(400).send('Producto inválido');
+  try {
+    const cart = await Cart.findOne({ userId: req.session.userId });
+    const item = cart?.products.find(product => String(product.productId) === id);
+    if (!item) return res.status(404).send('El producto no está en tu carrito');
+    if (action === 'increase') {
+      await requestService('products', `/products/${id}`);
+      const inventory = await requestService('stock', `/stock/${id}`);
+      if (item.quantity >= inventory.stock) return res.status(409).send('No hay stock suficiente para agregar otra unidad.');
+      item.quantity += 1;
+    } else if (action === 'remove' || item.quantity <= 1) {
+      cart.products = cart.products.filter(product => String(product.productId) !== id);
+    } else { item.quantity -= 1; }
+    await cart.save();
+    res.redirect(303, '/cart');
+  } catch (error) { res.status(error.status || 500).send('No se pudo actualizar el carrito. Intentá nuevamente.'); }
 });
 
 app.get("/cart", async (req, res) => {
@@ -257,7 +269,11 @@ app.get("/cart", async (req, res) => {
    LOGOUT
 ========================= */
 app.get("/logout", (req, res) => {
-  req.session.destroy(() => res.redirect("/"));
+  req.session.destroy(error => {
+    if (error) return res.status(503).send('No se pudo cerrar la sesión. Intentá nuevamente.');
+    res.clearCookie('connect.sid', { path: '/', httpOnly: true, sameSite: 'lax', secure: process.env.RENDER === 'true' });
+    res.redirect('/');
+  });
 });
 
 /* =========================
@@ -299,7 +315,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
 try {
   if (!process.env.MONGO_URI) throw new Error("Falta MONGO_URI en .env");
   if (!process.env.JWT_SECRET) throw new Error("Falta JWT_SECRET en .env");
-  if (process.env.RENDER === "true" && !process.env.SESSION_SECRET) throw new Error("Falta SESSION_SECRET");
+  if (!process.env.SESSION_SECRET) throw new Error("Falta SESSION_SECRET");
   validateServiceUrls(["users", "products", "stock"]);
   const listener = listenOptions(PORT);
   if (process.env.MONGO_DNS_SERVERS) {

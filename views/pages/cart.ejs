@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8">
@@ -23,8 +23,8 @@
   <section class="cart-page">
 
     <div class="cart-header">
-      <p>Your Selection</p>
-      <h1>Shopping Cart</h1>
+      <p>Tu selección</p>
+      <h1>Carrito</h1>
     </div>
 
     <% if(cart && cart.products && cart.products.length > 0){ %>
@@ -91,7 +91,7 @@
                 <!-- REMOVE -->
                 <form action="/cart/remove/<%= item.productId._id %>" method="POST">
                   <button type="submit" class="remove-btn">
-                    Remove Product
+                    Quitar producto
                   </button>
                 </form>
 
@@ -113,16 +113,14 @@
           <h2>$<%= total %></h2>
         </div>
 
-        <button class="checkout-btn">
-          Checkout
-        </button>
+        <p>Tu selección queda guardada. Noir todavía no realiza compras ni pagos.</p>
 
       </div>
 
     <% } else { %>
 
       <div class="empty-cart">
-        <h2>Your cart is empty</h2>
+        <h2>Tu carrito está vacío</h2>
         <a href="/bazar">Seguir comprando</a>
       </div>
 

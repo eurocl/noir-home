@@ -2,6 +2,12 @@
 
 Proyecto de Adán de Marco y Cid Ledesma para PP3. La web reúne galerías de arquitectura y un catálogo de productos para el hogar. Permite registrarse, iniciar sesión y guardar productos en un carrito. No incluye compras ni pagos.
 
+## Administración del catálogo
+
+Una cuenta con rol `admin` puede ingresar a `/admin` después de iniciar sesión. El panel permite consultar productos y stock, crear productos con existencias iniciales y eliminarlos con confirmación. Por ahora se usan imágenes que ya existen en `public/images`, no se suben archivos ni se editan productos existentes desde el panel.
+
+El backend web conserva el token en la sesión y verifica el rol mediante Usuarios antes de mostrar el panel o procesar formularios. Los formularios usan un token CSRF. Productos vuelve a validar el JWT y el rol administrador. Si el token vence, hay que iniciar sesión nuevamente.
+
 ## Organización
 
 Este repositorio contiene la web. Los tres backends están separados:

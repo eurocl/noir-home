@@ -5,6 +5,9 @@
     <a href="/bazar">Bazar</a>
     <a href="/about">Sobre nosotros</a>
     <a href="/cart">Carrito</a>
+    <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+      <a href="/admin">Administración</a>
+    <% } %>
     <% if ((typeof userId !== 'undefined' && userId) || (typeof userName !== 'undefined' && userName)) { %>
       <a href="/logout">Cerrar sesión</a>
     <% } else { %>

@@ -17,6 +17,7 @@ import { requestService } from "./services/client.js";
 import { listenOptions, validateServiceUrls } from "./services/deployment.js";
 import peopleRoutes from "./routes/people.js";
 import architectureRoutes from "./routes/architecture.js";
+import adminRoutes from "./routes/admin.js";
 
 dotenv.config({ path: fileURLToPath(new URL(".env", import.meta.url)) });
 
@@ -97,7 +98,12 @@ app.set("views", fileURLToPath(new URL("views", import.meta.url)));
 /* =========================
    ROUTES
 ========================= */
+app.use((req, res, next) => {
+  res.locals.isAdmin = req.session.userRole === "admin";
+  next();
+});
 app.use("/products", productsRoutes);
+app.use("/admin", adminRoutes);
 app.use("/people", peopleRoutes);
 app.use("/architecture", architectureRoutes);
 app.get("/stock", async (req, res) => {
@@ -171,6 +177,8 @@ app.post("/login", async (req, res) => {
     await new Promise((resolve, reject) => req.session.regenerate(error => error ? reject(error) : resolve()));
     req.session.userId = user.id;
     req.session.userName = user.name;
+    req.session.userRole = user.role;
+    req.session.accessToken = token;
     await new Promise((resolve, reject) => req.session.save(error => error ? reject(error) : resolve()));
     res.json({ token });
   } catch (error) {

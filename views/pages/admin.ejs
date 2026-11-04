@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administración | Proyecto Noir</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+<%- include('navigation') %>
+<main class="noir-admin">
+  <header><p class="eyebrow">Administración</p><h1>El catálogo de Noir.</h1><p>Hola, <%= userName %>. Agregá productos y revisá sus existencias.</p></header>
+  <% if (notice) { %><p class="admin-notice" role="status"><%= notice %></p><% } %>
+  <% if (stockUnavailable) { %><p role="alert">No pudimos consultar el inventario. Las cantidades se muestran como no disponibles.</p><% } %>
+  <details class="admin-create"><summary>Agregar un producto</summary>
+    <form method="post" action="/admin/products" class="admin-form">
+      <input type="hidden" name="_csrf" value="<%= csrf %>">
+      <label>Nombre<input name="name" required maxlength="120"></label>
+      <label>Categoría<select name="category" required><option value="">Elegí una categoría</option><% [['Living','Living'],['Bedroom','Dormitorio'],['Bathroom','Baño'],['Kitchen','Cocina'],['Lighting','Iluminación']].forEach(([value,label]) => { %><option value="<%= value %>"><%= label %></option><% }) %></select></label>
+      <label>Precio ($)<input name="price" type="number" min="0" step="0.01" required></label>
+      <label>Stock inicial<input name="stock" type="number" min="0" step="1" required></label>
+      <label class="wide">Descripción<textarea name="description" rows="3" maxlength="2000" required></textarea></label>
+      <label class="wide">Ruta de la imagen<input name="image" placeholder="/images/nombre-del-archivo.jpg" pattern="/images/.*" required aria-describedby="image-help"></label>
+      <p id="image-help" class="wide help">Usá una imagen que ya esté en la carpeta public/images del proyecto. Este formulario todavía no sube archivos.</p>
+      <button type="submit">Crear producto</button>
+    </form>
+  </details>
+  <section aria-labelledby="list-title"><div class="admin-list-heading"><h2 id="list-title">Productos <span>(<%= products.length %>)</span></h2><a href="/bazar">Ver el bazar ↗</a></div>
+    <% if (!products.length) { %><p>Todavía no hay productos. Agregá el primero desde el formulario.</p><% } %>
+    <div class="admin-products"><% products.forEach(product => { const item = inventory.find(row => String(row.productId) === String(product._id)); %>
+      <article class="admin-product">
+        <img src="<%= product.image %>" alt="" loading="lazy">
+        <div><h3><%= product.name %></h3><p><%= ({Living:'Living',Bedroom:'Dormitorio',Bathroom:'Baño',Kitchen:'Cocina',Lighting:'Iluminación'})[product.category] || product.category %></p><p><%= Number(product.price).toLocaleString('es-AR',{style:'currency',currency:'ARS'}) %> · Stock: <%= item ? item.stock : 'No disponible' %></p><a href="/products/<%= product._id %>">Ver producto</a></div>
+        <details class="admin-delete"><summary>Eliminar</summary><form method="post" action="/admin/products/<%= product._id %>/delete"><input type="hidden" name="_csrf" value="<%= csrf %>"><p>Se eliminarán el producto y su inventario. Esta acción no se puede deshacer.</p><label><input type="checkbox" name="confirm" value="<%= product._id %>" required> Confirmo eliminar <%= product.name %></label><button type="submit">Eliminar definitivamente</button></form></details>
+      </article>
+    <% }) %></div>
+  </section>
+</main>
+<script src="/js/admin.js" defer></script>
+</body>
+</html>

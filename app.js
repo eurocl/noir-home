@@ -18,6 +18,7 @@ import { listenOptions, validateServiceUrls } from "./services/deployment.js";
 import peopleRoutes from "./routes/people.js";
 import architectureRoutes from "./routes/architecture.js";
 import adminRoutes from "./routes/admin.js";
+import checkoutRoutes from './routes/checkout.js';
 
 dotenv.config({ path: fileURLToPath(new URL(".env", import.meta.url)) });
 
@@ -94,6 +95,7 @@ app.use((req, res, next) => {
 });
 app.use("/products", productsRoutes);
 app.use("/admin", adminRoutes);
+app.use(checkoutRoutes);
 app.use("/people", peopleRoutes);
 app.use("/architecture", architectureRoutes);
 app.get("/stock", async (req, res) => {
@@ -199,6 +201,8 @@ app.post("/cart/add/:id", async (req, res) => {
     const inventory = await requestService("stock", `/stock/${encodeURIComponent(productId)}`);
     let cart = await Cart.findOne({ userId });
 
+    if (cart?.checkoutOrderId) return res.redirect(303, `/orders/${cart.checkoutOrderId}`);
+
     if (!cart) {
       cart = new Cart({ userId, products: [] });
     }
@@ -219,7 +223,7 @@ app.post("/cart/add/:id", async (req, res) => {
     res.redirect("/cart");
   } catch (err) {
     console.log(err);
-    res.status(err.status || 500).send("No se pudo agregar el producto al carrito. Intentá nuevamente.");
+    res.status(err.name === 'VersionError' ? 409 : err.status || 500).send("El carrito pudo cambiar en otra pestaña. Volvé a consultarlo antes de agregar el producto.");
   }
 });
 
@@ -230,6 +234,7 @@ app.post('/cart/:action/:id', async (req, res) => {
   if (!mongoose.isObjectIdOrHexString(id)) return res.status(400).send('Producto inválido');
   try {
     const cart = await Cart.findOne({ userId: req.session.userId });
+    if (cart?.checkoutOrderId) return res.redirect(303, `/orders/${cart.checkoutOrderId}`);
     const item = cart?.products.find(product => String(product.productId) === id);
     if (!item) return res.status(404).send('El producto no está en tu carrito');
     if (action === 'increase') {
@@ -242,7 +247,7 @@ app.post('/cart/:action/:id', async (req, res) => {
     } else { item.quantity -= 1; }
     await cart.save();
     res.redirect(303, '/cart');
-  } catch (error) { res.status(error.status || 500).send('No se pudo actualizar el carrito. Intentá nuevamente.'); }
+  } catch (error) { res.status(error.name === 'VersionError' ? 409 : error.status || 500).send('No se pudo actualizar el carrito. Volvé a consultarlo antes de intentar nuevamente.'); }
 });
 
 app.get("/cart", async (req, res) => {
@@ -333,6 +338,7 @@ try {
     dns.setServers(process.env.MONGO_DNS_SERVERS.split(",").map((server) => server.trim()));
   }
   await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 10000 });
+  await Promise.all(Object.values(mongoose.models).map(model => model.init()));
   if (process.env.MONGO_CONTENT_URI && process.env.CONTENT_ENABLED !== "false") {
     await contentConnection.openUri(process.env.MONGO_CONTENT_URI, { dbName: "Hijos", serverSelectionTimeoutMS: 10000 })
       .then(() => console.log("Mongo de contenido conectado"))

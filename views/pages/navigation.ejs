@@ -9,6 +9,7 @@
       <a href="/admin">Administración</a>
     <% } %>
     <% if ((typeof userId !== 'undefined' && userId) || (typeof userName !== 'undefined' && userName)) { %>
+      <a href="/orders">Mis pedidos</a>
       <a href="/logout">Cerrar sesión</a>
     <% } else { %>
       <a href="/login">Ingresar</a>

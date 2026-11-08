@@ -8,6 +8,7 @@
   <title>Carrito | Proyecto Noir</title>
 
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/checkout.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -113,7 +114,14 @@
           <h2>$<%= total %></h2>
         </div>
 
-        <p>Tu selección queda guardada. Noir todavía no realiza compras ni pagos.</p>
+        <div>
+          <p>Compra de demostración. Se descontará stock, sin cobrar dinero.</p>
+          <% if (cart.checkoutOrderId) { %>
+            <a class="checkout-link" href="/orders/<%= cart.checkoutOrderId %>">Revisar pedido pendiente</a>
+          <% } else { %>
+            <a class="checkout-link" href="/checkout">Continuar compra</a>
+          <% } %>
+        </div>
 
       </div>
 

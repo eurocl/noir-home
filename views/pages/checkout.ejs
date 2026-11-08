@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Resumen de compra | Proyecto Noir</title><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/checkout.css"></head>
+<body><%- include('navigation') %>
+<main class="checkout-page">
+  <p class="eyebrow">Tu selección</p><h1>Revisá tu compra.</h1>
+  <p class="demo-notice">Esta es una compra de demostración. No ingreses datos de tarjeta: no se cobrará dinero. Al confirmar, se descontarán las unidades del inventario.</p>
+  <div class="order-lines"><% quote.items.forEach(item => { %>
+    <article><div><h2><%= item.name %></h2><p><%= item.quantity %> unidad(es) × <%= money(item.unitPriceCents) %></p></div><strong><%= money(item.unitPriceCents * item.quantity) %></strong></article>
+  <% }) %></div>
+  <p class="order-total">Total de demostración <strong><%= money(quote.totalCents) %></strong></p>
+  <p>La disponibilidad se comprueba al confirmar. Si no alcanza el stock de algún producto, la compra no se realizará y conservarás tu carrito.</p>
+  <form method="post" action="/checkout" class="checkout-confirm">
+    <input type="hidden" name="_csrf" value="<%= checkoutCsrf %>"><input type="hidden" name="orderId" value="<%= quote.orderId %>">
+    <button type="submit">Confirmar compra de demostración</button><a href="/cart">Volver al carrito</a>
+  </form>
+</main><script src="/js/checkout.js" defer></script></body></html>

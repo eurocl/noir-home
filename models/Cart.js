@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 const cartSchema = new mongoose.Schema({
 
+  checkoutOrderId: { type: mongoose.Schema.Types.ObjectId, default: null },
+
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -25,7 +27,7 @@ const cartSchema = new mongoose.Schema({
 
   ],
 
-});
+}, { optimisticConcurrency: true });
 
 const Cart = mongoose.model(
   "Cart",

@@ -73,7 +73,9 @@ app.use(
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 100,
+    max: 600,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
   })
 );
 
@@ -139,7 +141,7 @@ app.get("/bazar", async (req, res) => {
 
     console.log(err);
 
-    res.status(500).send("No se pudo cargar el bazar. Intentá nuevamente.");
+    res.status(err.status || 500).send("No se pudo cargar el bazar. Intentá nuevamente.");
 
   }
 });
@@ -150,6 +152,15 @@ app.get("/bazar", async (req, res) => {
 app.get("/login", (req, res) => res.render("pages/login"));
 app.get("/register", (req, res) => res.render("pages/register"));
 
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  skipSuccessfulRequests: true,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: { message: 'Demasiados intentos de acceso. Esperá unos minutos antes de volver a intentar.' },
+});
+
 app.post("/register", async (req, res) => {
   try {
     await requestService("users", "/users/register", { method: "POST", body: req.body });
@@ -159,7 +170,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+app.post("/login", loginLimiter, async (req, res) => {
   try {
     const { token, user } = await requestService("users", "/users/login", { method: "POST", body: req.body });
     await new Promise((resolve, reject) => req.session.regenerate(error => error ? reject(error) : resolve()));
@@ -261,7 +272,7 @@ app.get("/cart", async (req, res) => {
 
   } catch (err) {
     console.log("CART ERROR:", err);
-    res.status(500).send("Cart error");
+    res.status(err.status || 500).send("No se pudo consultar el carrito. Intentá nuevamente.");
   }
 });
 

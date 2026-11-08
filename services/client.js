@@ -18,15 +18,22 @@ export async function requestService(service, path, { method = "GET", body, toke
   const onRender = process.env.RENDER === 'true';
   const signal = AbortSignal.timeout(serviceTimeout());
   async function fetchJson(url, options, readiness = false) {
+    let attempts = 0;
     while (true) {
       try {
         const response = await fetch(url, { ...options, signal, redirect: 'error' });
         const text = await response.text();
         let data;
         try { data = JSON.parse(text); } catch { /* Render can return an HTML loading page. */ }
-        const transient = [502, 503, 504].includes(response.status) || (response.ok && data === undefined);
+        const transient = [429, 502, 503, 504].includes(response.status) || (response.ok && data === undefined);
         if (onRender && options.method === 'GET' && (transient || (readiness && response.ok && data?.ready !== true))) {
-          await delay(500, undefined, { signal });
+          const retryAfter = response.headers.get('retry-after');
+          const seconds = retryAfter && /^\d+(\.\d+)?$/.test(retryAfter) ? Number(retryAfter) : NaN;
+          const dateMs = retryAfter ? Date.parse(retryAfter) - Date.now() : NaN;
+          const requestedMs = Number.isFinite(seconds) ? seconds * 1000 : Number.isFinite(dateMs) ? Math.max(0, dateMs) : 0;
+          const backoffMs = Math.min(10000, 1000 * 2 ** Math.min(attempts++, 4));
+          console.warn(JSON.stringify({ event: 'service_read_retry', service, status: response.status, attempt: attempts, responseType: response.headers.get('content-type') }));
+          await delay(Math.min(2147483647, Math.max(backoffMs, requestedMs)), undefined, { signal });
           continue;
         }
         if (!response.ok) throw new ServiceError(response.status, data?.message || `El servicio de ${label} no está disponible`);
@@ -34,7 +41,7 @@ export async function requestService(service, path, { method = "GET", body, toke
         return data;
       } catch (error) {
         if (error instanceof ServiceError || signal.aborted || !onRender || options.method !== 'GET') throw error;
-        await delay(500, undefined, { signal });
+        await delay(Math.min(10000, 1000 * 2 ** Math.min(attempts++, 4)), undefined, { signal });
       }
     }
   }

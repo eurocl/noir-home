@@ -132,7 +132,7 @@ app.get("/bazar", async (req, res) => {
     let catalogDelayed = false;
     let products;
     try {
-      products = await requestService("products", "/products", { timeoutMs: 8000 });
+      products = await requestService("products", "/products", { timeoutMs: 3500 });
       rememberCatalog(products);
     } catch (error) {
       products = getLastCatalog();

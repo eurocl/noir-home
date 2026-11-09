@@ -1,3 +1,5 @@
+import snapshot from './catalog-snapshot.json' with { type: 'json' };
+
 let catalog = new Map();
 let expiresAt = 0;
 let lastCatalog;
@@ -9,9 +11,12 @@ export function rememberCatalog(products) {
 }
 
 export function getLastCatalog() {
-  return Date.now() < expiresAt + 15 * 60_000 ? lastCatalog : undefined;
+  return lastCatalog ?? snapshot;
 }
 
 export function findRecentProduct(id) {
-  return getLastCatalog() ? catalog.get(id) : undefined;
+  return Date.now() < expiresAt ? catalog.get(id) : undefined;
+}
+export function findDisplayProduct(id) {
+  return getLastCatalog().find(product => String(product._id) === id);
 }

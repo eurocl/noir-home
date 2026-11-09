@@ -57,6 +57,9 @@
     <!-- INFO -->
 
     <div class="detail-info">
+      <% if (catalogDelayed) { %>
+        <p role="status">Estás viendo una ficha guardada. El precio y el stock se verifican al comprar.</p>
+      <% } %>
 
       <p class="detail-category">
         <%= product.category || "Sin categoría" %>

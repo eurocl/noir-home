@@ -16,11 +16,8 @@ router.get("/:id/stock", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const id = encodeURIComponent(req.params.id);
-    const [product, inventory] = await Promise.all([
-      requestService("products", `/products/${id}`),
-      requestService("stock", `/stock/${id}`, { timeoutMs: 3000 }).catch(() => null),
-    ]);
-    res.render("pages/product", { product, inventory, userId: req.session?.userId, userName: req.session?.userName });
+    const product = await requestService("products", `/products/${id}`);
+    res.render("pages/product", { product, userId: req.session?.userId, userName: req.session?.userName });
   } catch (error) { fail(res, error); }
 });
 router.post("/", async (req, res) => {

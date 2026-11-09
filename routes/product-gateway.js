@@ -15,10 +15,11 @@ router.get("/:id/stock", async (req, res) => {
 });
 router.get("/:id", async (req, res) => {
   try {
-    const product = await requestService("products", `/products/${encodeURIComponent(req.params.id)}`);
-    let inventory = null;
-    try { inventory = await requestService("stock", `/stock/${encodeURIComponent(req.params.id)}`); }
-    catch { /* Product details remain available when inventory cannot be read. */ }
+    const id = encodeURIComponent(req.params.id);
+    const [product, inventory] = await Promise.all([
+      requestService("products", `/products/${id}`),
+      requestService("stock", `/stock/${id}`, { timeoutMs: 3000 }).catch(() => null),
+    ]);
     res.render("pages/product", { product, inventory, userId: req.session?.userId, userName: req.session?.userName });
   } catch (error) { fail(res, error); }
 });

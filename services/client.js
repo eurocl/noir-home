@@ -8,7 +8,7 @@ export class ServiceError extends Error {
   }
 }
 
-export async function requestService(service, path, { method = "GET", body, token, internal = false } = {}) {
+export async function requestService(service, path, { method = "GET", body, token, internal = false, timeoutMs = serviceTimeout() } = {}) {
   const services = {
     users: [process.env.USERS_SERVICE_URL || "http://127.0.0.1:3001", "usuarios"],
     products: [process.env.PRODUCTS_SERVICE_URL || "http://127.0.0.1:3002", "productos"],
@@ -16,7 +16,7 @@ export async function requestService(service, path, { method = "GET", body, toke
   };
   const [base, label] = services[service];
   const onRender = process.env.RENDER === 'true';
-  const signal = AbortSignal.timeout(serviceTimeout());
+  const signal = AbortSignal.timeout(timeoutMs);
   async function fetchJson(url, options, readiness = false) {
     let attempts = 0;
     while (true) {

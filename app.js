@@ -14,6 +14,7 @@ import { loadArchitecture } from "./services/architecture.js";
 
 import productsRoutes from "./routes/product-gateway.js";
 import { requestService } from "./services/client.js";
+import { rememberCatalog } from "./services/catalog-cache.js";
 import { listenOptions, validateServiceUrls } from "./services/deployment.js";
 import peopleRoutes from "./routes/people.js";
 import architectureRoutes from "./routes/architecture.js";
@@ -129,6 +130,7 @@ app.get("/bazar", async (req, res) => {
   try {
 
     const products = await requestService("products", "/products");
+    rememberCatalog(products);
 
     const people = await loadContent(Person);
 

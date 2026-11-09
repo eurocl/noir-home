@@ -1,5 +1,6 @@
 import express from "express";
 import { requestService } from "../services/client.js";
+import { findRecentProduct } from "../services/catalog-cache.js";
 
 const router = express.Router();
 const fail = (res, error) => res.status(error.status || 500).json({ message: error.message });
@@ -16,7 +17,8 @@ router.get("/:id/stock", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const id = encodeURIComponent(req.params.id);
-    const product = await requestService("products", `/products/${id}`);
+    const product = findRecentProduct(req.params.id)
+      ?? await requestService("products", `/products/${id}`);
     res.render("pages/product", { product, userId: req.session?.userId, userName: req.session?.userName });
   } catch (error) { fail(res, error); }
 });

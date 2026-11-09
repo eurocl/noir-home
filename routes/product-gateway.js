@@ -11,14 +11,14 @@ router.get("/", async (req, res) => {
   catch (error) { fail(res, error); }
 });
 router.get("/:id/stock", async (req, res) => {
-  try { res.json(await requestService("stock", `/stock/${encodeURIComponent(req.params.id)}`)); }
+  try { res.json(await requestService("stock", `/stock/${encodeURIComponent(req.params.id)}`, { timeoutMs: 8000 })); }
   catch (error) { fail(res, error); }
 });
 router.get("/:id", async (req, res) => {
   try {
     const id = encodeURIComponent(req.params.id);
     const product = findRecentProduct(req.params.id)
-      ?? await requestService("products", `/products/${id}`);
+      ?? await requestService("products", `/products/${id}`, { timeoutMs: 8000 });
     res.render("pages/product", { product, userId: req.session?.userId, userName: req.session?.userName });
   } catch (error) { fail(res, error); }
 });

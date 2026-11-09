@@ -49,7 +49,7 @@ async function finishOrder(order, receipt) {
 async function processOrder(order) {
   if (order.status !== 'pending') return;
   const receipt = await requestService('stock', `/internal/purchases/${order._id}`, {
-    method: 'PUT', internal: true,
+    method: 'PUT', internal: true, timeoutMs: 10000,
     body: { items: order.items.map(item => ({ productId: String(item.productId), quantity: item.quantity })) },
   });
   await finishOrder(order, receipt);
@@ -61,9 +61,12 @@ router.get('/checkout', async (req, res) => {
     if (cart?.checkoutOrderId) return res.redirect(`/orders/${cart.checkoutOrderId}`);
     if (!cart?.products.length) return res.redirect('/cart');
     if (cart.products.length > 100) throw problem(400, 'El carrito admite hasta 100 productos diferentes.');
+    const catalog = await requestService('products', '/products', { timeoutMs: 8000 });
+    const productsById = new Map(catalog.map(product => [String(product._id), product]));
     const items = [];
     for (const item of cart.products) {
-      const product = await requestService('products', `/products/${item.productId}`);
+      const product = productsById.get(String(item.productId));
+      if (!product) throw problem(409, 'Un producto ya no está disponible. Revisá tu carrito.');
       const unitPriceCents = Math.round(Number(product.price) * 100);
       if (!Number.isSafeInteger(item.quantity) || item.quantity < 1 || !Number.isSafeInteger(unitPriceCents) || unitPriceCents < 0) throw problem(409, 'Revisá los precios y cantidades de tu carrito.');
       items.push({ productId: String(item.productId), name: product.name, quantity: item.quantity, unitPriceCents });
@@ -123,7 +126,7 @@ router.get('/orders/:id', async (req, res) => {
     if (!order) throw problem(404, 'Pedido no encontrado.');
     if (order.status === 'pending') {
       try {
-        const receipt = await requestService('stock', `/internal/purchases/${order._id}`, { internal: true });
+        const receipt = await requestService('stock', `/internal/purchases/${order._id}`, { internal: true, timeoutMs: 3000 });
         await finishOrder(order, receipt);
         order = await Order.findById(order._id).lean();
       } catch { /* Never display a payment or stock confirmation without its receipt. */ }

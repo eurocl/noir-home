@@ -1,10 +1,8 @@
 const status = document.querySelector('#product-stock');
 const retry = document.querySelector('#retry-stock');
-const add = document.querySelector('#add-product');
 
 async function loadStock() {
   retry.hidden = true;
-  add.disabled = true;
   status.textContent = 'Consultando disponibilidad…';
   status.className = 'stock';
   try {
@@ -20,7 +18,6 @@ async function loadStock() {
     const available = stock > 0;
     status.textContent = available ? 'Disponible' : 'Sin stock';
     status.classList.add(available ? 'in-stock' : 'out-stock');
-    add.disabled = !available;
   } catch {
     status.textContent = 'Disponibilidad sin confirmar.';
     retry.hidden = false;

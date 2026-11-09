@@ -208,14 +208,6 @@ async function cartProduct(id) {
   return findRecentProduct(String(id)) ?? requestService("products", `/products/${encodeURIComponent(id)}`, { timeoutMs: 8000 });
 }
 
-async function cartInventory(id) {
-  const inventory = await requestService("stock", `/stock/${encodeURIComponent(id)}`, { timeoutMs: 8000 });
-  if (!Number.isSafeInteger(inventory?.stock) || inventory.stock < 0) {
-    throw Object.assign(new Error("Disponibilidad inválida"), { status: 503 });
-  }
-  return inventory;
-}
-
 app.post("/cart/add/:id", async (req, res) => {
   try {
     if (!req.session.userId) return res.redirect("/login");
@@ -227,7 +219,7 @@ app.post("/cart/add/:id", async (req, res) => {
     let cart = await Cart.findOne({ userId });
 
     if (cart?.checkoutOrderId) return res.redirect(303, `/orders/${cart.checkoutOrderId}`);
-    const [, inventory] = await Promise.all([cartProduct(productId), cartInventory(productId)]);
+    await cartProduct(productId);
 
     if (!cart) {
       cart = new Cart({ userId, products: [] });
@@ -237,7 +229,6 @@ app.post("/cart/add/:id", async (req, res) => {
       (item) => item.productId.toString() === productId
     );
 
-    if ((existingProduct?.quantity || 0) >= inventory.stock) return res.status(409).send("No hay stock suficiente para agregar otra unidad.");
     if (existingProduct) {
       existingProduct.quantity += 1;
     } else {
@@ -250,7 +241,7 @@ app.post("/cart/add/:id", async (req, res) => {
   } catch (err) {
     console.log(err);
     if (err.name === 'VersionError') return res.status(409).send("El carrito cambió. Volvé a consultarlo antes de agregar el producto.");
-    res.status(err.status || 500).send("No se pudo confirmar el producto o su disponibilidad. Volvé a la ficha para intentar de nuevo.");
+    res.status(err.status || 500).send("No se pudo agregar el producto. Volvé a la ficha para intentar de nuevo.");
   }
 });
 
@@ -265,8 +256,7 @@ app.post('/cart/:action/:id', async (req, res) => {
     const item = cart?.products.find(product => String(product.productId) === id);
     if (!item) return res.status(404).send('El producto no está en tu carrito');
     if (action === 'increase') {
-      const [, inventory] = await Promise.all([cartProduct(id), cartInventory(id)]);
-      if (item.quantity >= inventory.stock) return res.status(409).send('No hay stock suficiente para agregar otra unidad.');
+      await cartProduct(id);
       item.quantity += 1;
     } else if (action === 'remove' || item.quantity <= 1) {
       cart.products = cart.products.filter(product => String(product.productId) !== id);

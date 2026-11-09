@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mis pedidos | Proyecto Noir</title><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/checkout.css"></head>
-<body><%- include('navigation') %><main class="checkout-page"><p class="eyebrow">Tu cuenta</p><h1>Mis pedidos.</h1><p>Compras de demostración, sin cobros ni envíos. Mostramos tus últimos 50 pedidos.</p>
+<body><%- include('navigation') %><main class="checkout-page"><p class="eyebrow">Tu cuenta</p><h1>Mis pedidos</h1><p>Pedidos sin cobros ni envíos. Mostramos tus últimos 50 pedidos.</p>
 <% if (!orders.length) { %><p>Todavía no confirmaste una compra.</p><a href="/bazar">Explorar el bazar</a><% } %>
 <div class="order-lines"><% orders.forEach(order => { %><article><div><h2><a href="/orders/<%= order._id %>">Pedido <span class="order-number"><%= order._id %></span></a></h2><p><%= new Date(order.createdAt).toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' }) %></p><p><%= ({confirmed:'Confirmado', rejected:'Sin stock suficiente', pending:'Pendiente de confirmación'})[order.status] %></p></div><strong><%= money(order.totalCents) %></strong></article><% }) %></div>
 </main></body></html>

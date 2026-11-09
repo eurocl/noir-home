@@ -4,14 +4,14 @@
 <body><%- include('navigation') %><main class="checkout-page" data-order-status="<%= order.status %>">
 <p class="eyebrow">Pedido <span class="order-number"><%= order._id %></span></p>
 <% if (order.status === 'confirmed') { %>
-  <h1>Tu compra de demostración está confirmada.</h1><p class="demo-notice">El pedido quedó guardado y las unidades se descontaron del stock. No se realizó ningún cobro ni se generará un envío.</p>
+  <h1>Tu compra está confirmada</h1><p class="demo-notice">El pedido quedó guardado y las unidades se descontaron del stock. No se realizó ningún cobro ni se generará un envío.</p>
 <% } else if (order.status === 'rejected') { %>
-  <h1>No pudimos confirmar la compra.</h1><p class="demo-notice"><%= order.reason || 'No hay stock suficiente.' %> No se descontaron unidades. Tu carrito sigue guardado para que lo revises.</p>
+  <h1>No pudimos confirmar la compra</h1><p class="demo-notice"><%= order.reason || 'No hay stock suficiente.' %> No se descontaron unidades. Tu carrito sigue guardado para que lo revises.</p>
 <% } else { %>
-  <h1>Estamos esperando la confirmación.</h1><p class="demo-notice">Tu pedido quedó guardado. Todavía no podemos confirmar el resultado. Retomá este mismo pedido para evitar duplicar la compra. No se cobra dinero.</p>
+  <h1>Estamos esperando la confirmación</h1><p class="demo-notice">Tu pedido quedó guardado. Todavía no podemos confirmar el resultado. Retomá este mismo pedido para evitar duplicar la compra. No se cobra dinero.</p>
   <form method="post" action="/orders/<%= order._id %>/retry" class="checkout-confirm"><input type="hidden" name="_csrf" value="<%= checkoutCsrf %>"><button type="submit">Retomar este pedido</button></form>
 <% } %>
 <div class="order-lines"><% order.items.forEach(item => { %><article><div><h2><%= item.name %></h2><p><%= item.quantity %> unidad(es) × <%= money(item.unitPriceCents) %></p></div><strong><%= money(item.quantity * item.unitPriceCents) %></strong></article><% }) %></div>
-<p class="order-total">Total de demostración <strong><%= money(order.totalCents) %></strong></p>
+<p class="order-total">Total <strong><%= money(order.totalCents) %></strong></p>
 <div class="order-actions"><a href="/orders">Mis pedidos</a><a href="/cart">Mi carrito</a><a href="/bazar">Seguir explorando</a></div>
 </main><script src="/js/checkout.js" defer></script></body></html>

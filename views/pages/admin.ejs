@@ -10,7 +10,7 @@
 <body>
 <%- include('navigation') %>
 <main class="noir-admin">
-  <header><p class="eyebrow">Administración</p><h1>El catálogo de Noir.</h1><p>Hola, <%= userName %>. Agregá productos y revisá sus existencias.</p></header>
+  <header><p class="eyebrow">Administración</p><h1>El catálogo de Noir</h1><p>Hola, <%= userName %>. Agregá productos y revisá sus existencias.</p></header>
   <% if (notice) { %><p class="admin-notice" role="status"><%= notice %></p><% } %>
   <% if (stockUnavailable) { %><p role="alert">No pudimos consultar el inventario. Las cantidades se muestran como no disponibles.</p><% } %>
   <details class="admin-create"><summary>Agregar un producto</summary>

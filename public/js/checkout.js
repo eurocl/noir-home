@@ -12,6 +12,6 @@ window.addEventListener('pageshow', () => {
     delete form.dataset.submitting;
     const button = form.querySelector('button[type="submit"]');
     button.disabled = false;
-    button.textContent = form.action.endsWith('/retry') ? 'Retomar este pedido' : 'Confirmar compra de demostración';
+    button.textContent = form.action.endsWith('/retry') ? 'Retomar este pedido' : 'Confirmar compra';
   });
 });

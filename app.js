@@ -165,7 +165,18 @@ app.get("/bazar", async (req, res) => {
 /* =========================
    LOGIN / REGISTER
 ========================= */
-app.get("/login", (req, res) => res.render("pages/login"));
+let usersWarmup;
+let lastUsersWarmup = 0;
+
+app.get("/login", (req, res) => {
+  if (process.env.RENDER === 'true' && !usersWarmup && Date.now() - lastUsersWarmup > 60_000) {
+    lastUsersWarmup = Date.now();
+    usersWarmup = requestService("users", "/health", { timeoutMs: 30000 })
+      .catch(() => {})
+      .finally(() => { usersWarmup = undefined; });
+  }
+  res.render("pages/login");
+});
 app.get("/register", (req, res) => res.render("pages/register"));
 
 const loginLimiter = rateLimit({

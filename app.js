@@ -14,7 +14,7 @@ import { loadArchitecture } from "./services/architecture.js";
 
 import productsRoutes from "./routes/product-gateway.js";
 import { requestService } from "./services/client.js";
-import { rememberCatalog } from "./services/catalog-cache.js";
+import { getLastCatalog, rememberCatalog } from "./services/catalog-cache.js";
 import { listenOptions, validateServiceUrls } from "./services/deployment.js";
 import peopleRoutes from "./routes/people.js";
 import architectureRoutes from "./routes/architecture.js";
@@ -129,13 +129,22 @@ app.get("/", async (req, res) => {
 app.get("/bazar", async (req, res) => {
   try {
 
-    const products = await requestService("products", "/products");
-    rememberCatalog(products);
+    let catalogDelayed = false;
+    let products;
+    try {
+      products = await requestService("products", "/products", { timeoutMs: 8000 });
+      rememberCatalog(products);
+    } catch (error) {
+      products = getLastCatalog();
+      if (!products || ![429, 502, 503, 504].includes(error.status)) throw error;
+      catalogDelayed = true;
+    }
 
     const people = await loadContent(Person);
 
     res.render("pages/home", {
       products,
+      catalogDelayed,
       people,
       userId: req.session.userId,
       userName: req.session.userName,
@@ -145,7 +154,10 @@ app.get("/bazar", async (req, res) => {
 
     console.log(err);
 
-    res.status(err.status || 500).send("No se pudo cargar el bazar. Intentá nuevamente.");
+    if ([429, 502, 503, 504].includes(err.status)) {
+      return res.status(503).set("Retry-After", "10").send('El catálogo está tardando en responder. <a href="/bazar">Volver a intentar</a>');
+    }
+    res.status(500).send("No se pudo cargar el bazar. Intentá nuevamente.");
 
   }
 });

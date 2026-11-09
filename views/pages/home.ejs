@@ -49,6 +49,9 @@
       <h2>Nuestros productos</h2>
     </div>
 
+    <% if (typeof catalogDelayed !== 'undefined' && catalogDelayed) { %>
+      <p role="status">Mostramos el último catálogo disponible. El precio y el stock se verifican al comprar.</p>
+    <% } %>
     <p id="filter-status" class="filter-status" role="status"></p>
     <p id="empty-category" hidden>No products in this category yet.</p>
     <div class="products-grid" id="product-grid">

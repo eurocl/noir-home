@@ -230,7 +230,7 @@ app.post("/cart/add/:id", async (req, res) => {
     let cart = await Cart.findOne({ userId });
 
     if (cart?.checkoutOrderId) return res.redirect(303, `/orders/${cart.checkoutOrderId}`);
-    await cartProduct(productId);
+    if (!findDisplayProduct(productId)) await cartProduct(productId);
 
     if (!cart) {
       cart = new Cart({ userId, products: [] });
@@ -252,7 +252,8 @@ app.post("/cart/add/:id", async (req, res) => {
   } catch (err) {
     console.log(err);
     if (err.name === 'VersionError') return res.status(409).send("El carrito cambió. Volvé a consultarlo antes de agregar el producto.");
-    res.status(err.status || 500).send("No se pudo agregar el producto. Volvé a la ficha para intentar de nuevo.");
+    if (err.status === 404) return res.status(404).send("El producto ya no está disponible.");
+    res.status(err.status || 500).send('No pudimos guardar el producto. <a href="/cart">Revisar mi carrito</a>');
   }
 });
 

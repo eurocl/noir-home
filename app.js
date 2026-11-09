@@ -14,7 +14,7 @@ import { loadArchitecture } from "./services/architecture.js";
 
 import productsRoutes from "./routes/product-gateway.js";
 import { requestService } from "./services/client.js";
-import { getLastCatalog, rememberCatalog } from "./services/catalog-cache.js";
+import { findRecentProduct, getLastCatalog, rememberCatalog } from "./services/catalog-cache.js";
 import { listenOptions, validateServiceUrls } from "./services/deployment.js";
 import peopleRoutes from "./routes/people.js";
 import architectureRoutes from "./routes/architecture.js";
@@ -204,6 +204,18 @@ app.post("/login", loginLimiter, async (req, res) => {
 /* =========================
    CART
 ========================= */
+async function cartProduct(id) {
+  return findRecentProduct(String(id)) ?? requestService("products", `/products/${encodeURIComponent(id)}`, { timeoutMs: 8000 });
+}
+
+async function cartInventory(id) {
+  const inventory = await requestService("stock", `/stock/${encodeURIComponent(id)}`, { timeoutMs: 8000 });
+  if (!Number.isSafeInteger(inventory?.stock) || inventory.stock < 0) {
+    throw Object.assign(new Error("Disponibilidad inválida"), { status: 503 });
+  }
+  return inventory;
+}
+
 app.post("/cart/add/:id", async (req, res) => {
   try {
     if (!req.session.userId) return res.redirect("/login");
@@ -211,11 +223,11 @@ app.post("/cart/add/:id", async (req, res) => {
     const userId = req.session.userId;
     const productId = req.params.id;
 
-    await requestService("products", `/products/${encodeURIComponent(productId)}`);
-    const inventory = await requestService("stock", `/stock/${encodeURIComponent(productId)}`);
+    if (!mongoose.isObjectIdOrHexString(productId)) return res.status(400).send("Producto inválido");
     let cart = await Cart.findOne({ userId });
 
     if (cart?.checkoutOrderId) return res.redirect(303, `/orders/${cart.checkoutOrderId}`);
+    const [, inventory] = await Promise.all([cartProduct(productId), cartInventory(productId)]);
 
     if (!cart) {
       cart = new Cart({ userId, products: [] });
@@ -237,7 +249,8 @@ app.post("/cart/add/:id", async (req, res) => {
     res.redirect("/cart");
   } catch (err) {
     console.log(err);
-    res.status(err.name === 'VersionError' ? 409 : err.status || 500).send("El carrito pudo cambiar en otra pestaña. Volvé a consultarlo antes de agregar el producto.");
+    if (err.name === 'VersionError') return res.status(409).send("El carrito cambió. Volvé a consultarlo antes de agregar el producto.");
+    res.status(err.status || 500).send("No se pudo confirmar el producto o su disponibilidad. Volvé a la ficha para intentar de nuevo.");
   }
 });
 
@@ -252,8 +265,7 @@ app.post('/cart/:action/:id', async (req, res) => {
     const item = cart?.products.find(product => String(product.productId) === id);
     if (!item) return res.status(404).send('El producto no está en tu carrito');
     if (action === 'increase') {
-      await requestService('products', `/products/${id}`);
-      const inventory = await requestService('stock', `/stock/${id}`);
+      const [, inventory] = await Promise.all([cartProduct(id), cartInventory(id)]);
       if (item.quantity >= inventory.stock) return res.status(409).send('No hay stock suficiente para agregar otra unidad.');
       item.quantity += 1;
     } else if (action === 'remove' || item.quantity <= 1) {
@@ -275,7 +287,7 @@ app.get("/cart", async (req, res) => {
       ...savedCart,
       products: await Promise.all(savedCart.products.map(async item => {
         try {
-          const product = await requestService("products", `/products/${encodeURIComponent(item.productId)}`);
+          const product = await cartProduct(item.productId);
           return { ...item, productId: product };
         } catch (error) {
           if (error.status === 404) return { ...item, productId: null };

@@ -14,7 +14,7 @@ import { loadArchitecture } from "./services/architecture.js";
 
 import productsRoutes from "./routes/product-gateway.js";
 import { requestService } from "./services/client.js";
-import { findRecentProduct, getLastCatalog, rememberCatalog } from "./services/catalog-cache.js";
+import { findDisplayProduct, findRecentProduct, getLastCatalog, rememberCatalog } from "./services/catalog-cache.js";
 import { listenOptions, validateServiceUrls } from "./services/deployment.js";
 import peopleRoutes from "./routes/people.js";
 import architectureRoutes from "./routes/architecture.js";
@@ -267,7 +267,6 @@ app.post('/cart/:action/:id', async (req, res) => {
     const item = cart?.products.find(product => String(product.productId) === id);
     if (!item) return res.status(404).send('El producto no está en tu carrito');
     if (action === 'increase') {
-      await cartProduct(id);
       item.quantity += 1;
     } else if (action === 'remove' || item.quantity <= 1) {
       cart.products = cart.products.filter(product => String(product.productId) !== id);
@@ -288,7 +287,7 @@ app.get("/cart", async (req, res) => {
       ...savedCart,
       products: await Promise.all(savedCart.products.map(async item => {
         try {
-          const product = await cartProduct(item.productId);
+          const product = findDisplayProduct(String(item.productId)) ?? await cartProduct(item.productId);
           return { ...item, productId: product };
         } catch (error) {
           if (error.status === 404) return { ...item, productId: null };

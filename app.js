@@ -277,6 +277,7 @@ app.post('/cart/:action/:id', async (req, res) => {
 });
 
 app.get("/cart", async (req, res) => {
+  res.set("Cache-Control", "no-store");
   try {
     if (!req.session.userId) {
       return res.redirect("/login");
@@ -290,7 +291,7 @@ app.get("/cart", async (req, res) => {
           const product = findDisplayProduct(String(item.productId)) ?? await cartProduct(item.productId);
           return { ...item, productId: product };
         } catch (error) {
-          if (error.status === 404) return { ...item, productId: null };
+          if ([404, 429, 502, 503, 504].includes(error.status)) return { ...item, unavailableProductId: item.productId, productId: null };
           throw error;
         }
       })),

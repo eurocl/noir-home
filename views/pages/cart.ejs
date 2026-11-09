@@ -69,7 +69,7 @@
 
                     <!-- DECREASE -->
                     <form action="/cart/decrease/<%= item.productId._id %>" method="POST">
-                      <button type="submit" class="qty-btn">-</button>
+                      <button type="submit" class="qty-btn" <%= cart.checkoutOrderId ? 'disabled' : '' %>>-</button>
                     </form>
 
                     <span class="cart-quantity">
@@ -78,7 +78,7 @@
 
                     <!-- INCREASE -->
                     <form action="/cart/increase/<%= item.productId._id %>" method="POST">
-                      <button type="submit" class="qty-btn">+</button>
+                      <button type="submit" class="qty-btn" <%= cart.checkoutOrderId ? 'disabled' : '' %>>+</button>
                     </form>
 
                   </div>
@@ -91,7 +91,7 @@
 
                 <!-- REMOVE -->
                 <form action="/cart/remove/<%= item.productId._id %>" method="POST">
-                  <button type="submit" class="remove-btn">
+                  <button type="submit" class="remove-btn" <%= cart.checkoutOrderId ? 'disabled' : '' %>>
                     Quitar producto
                   </button>
                 </form>
@@ -100,6 +100,13 @@
 
             </div>
 
+          <% } else { %>
+            <div class="cart-card">
+              <p>No pudimos cargar los datos de este producto. Cantidad: <%= item.quantity %></p>
+              <form action="/cart/remove/<%= item.unavailableProductId %>" method="POST">
+                <button type="submit" class="remove-btn" <%= cart.checkoutOrderId ? 'disabled' : '' %>>Quitar producto</button>
+              </form>
+            </div>
           <% } %>
 
         <% }) %>
@@ -117,6 +124,7 @@
         <div>
           <p>Se descontará stock al confirmar. No se cobrará dinero.</p>
           <% if (cart.checkoutOrderId) { %>
+            <p>Este carrito está asociado a un pedido pendiente. Revisá el pedido para poder editarlo.</p>
             <a class="checkout-link" href="/orders/<%= cart.checkoutOrderId %>">Revisar pedido pendiente</a>
           <% } else { %>
             <a class="checkout-link" href="/checkout">Continuar compra</a>

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-// Independent connection for architecture references and testimonials.
+// Conexion independiente para el contenido de arquitectura.
 const contentConnection = mongoose.createConnection();
 
 export default contentConnection;

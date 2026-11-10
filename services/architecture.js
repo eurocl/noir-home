@@ -9,7 +9,7 @@ export async function loadArchitecture() {
     try {
       const galleries = await Architecture.find({}, { _id: 0, __v: 0 }).sort({ number: 1 }).lean();
       return { galleries, architectureUnavailable: false };
-    } catch { /* Keep the gallery available while the database recovers. */ }
+    } catch { /*ACA MANTENEMOS LA GALERIA DISPONIVLE CUANDO LA BASE DE DATOS SE ESTA RECUPERANDO  */ }
   }
   return { galleries: localGalleries, architectureUnavailable: true };
 }

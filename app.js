@@ -9,14 +9,12 @@ import dns from "node:dns";
 import contentConnection from "./config/content-database.js";
 
 import Cart from "./models/Cart.js";
-import Person from "./models/Person.js";
 import { loadArchitecture } from "./services/architecture.js";
 
 import productsRoutes from "./routes/product-gateway.js";
 import { requestService } from "./services/client.js";
 import { findDisplayProduct, findRecentProduct, getLastCatalog, rememberCatalog } from "./services/catalog-cache.js";
 import { listenOptions, validateServiceUrls } from "./services/deployment.js";
-import peopleRoutes from "./routes/people.js";
 import architectureRoutes from "./routes/architecture.js";
 import adminRoutes from "./routes/admin.js";
 import checkoutRoutes from './routes/checkout.js';
@@ -50,12 +48,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(fileURLToPath(new URL("public", import.meta.url))));
 
 /* =========================
-   SESSION
+   SESION
 ========================= */
 app.use(persistentSession);
 
 /* =========================
-   SECURITY
+   Seguridad
 ========================= */
 app.use(
   helmet({
@@ -88,7 +86,7 @@ app.set("view engine", "ejs");
 app.set("views", fileURLToPath(new URL("views", import.meta.url)));
 
 /* =========================
-   ROUTES
+   RUTAS
 ========================= */
 app.use((req, res, next) => {
   res.locals.isAdmin = req.session.userRole === "admin";
@@ -97,16 +95,13 @@ app.use((req, res, next) => {
 app.use("/products", productsRoutes);
 app.use("/admin", adminRoutes);
 app.use(checkoutRoutes);
-app.use("/people", peopleRoutes);
 app.use("/architecture", architectureRoutes);
 app.get("/stock", async (req, res) => {
   try { res.json(await requestService("stock", "/stock")); }
   catch (error) { res.status(error.status || 500).json({ message: error.message }); }
 });
 
-/* =========================
-   MONGO
-========================= */
+
 
 /* =========================
    HOME
@@ -122,7 +117,7 @@ app.get("/", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    res.status(500).send("No se pudo cargar la arquitectura. Intentá nuevamente.");
+    res.status(500).send("No se pudo cargar la imagen. Intentá nuevamente.");
   }
 });
 
@@ -140,12 +135,10 @@ app.get("/bazar", async (req, res) => {
       catalogDelayed = true;
     }
 
-    const people = await loadContent(Person);
 
     res.render("pages/home", {
       products,
       catalogDelayed,
-      people,
       userId: req.session.userId,
       userName: req.session.userName,
     });
@@ -155,7 +148,7 @@ app.get("/bazar", async (req, res) => {
     console.log(err);
 
     if ([429, 502, 503, 504].includes(err.status)) {
-      return res.status(503).set("Retry-After", "10").send('El catálogo está tardando en responder. <a href="/bazar">Volver a intentar</a>');
+      return res.status(503).set("Retry-After", "10").send('El catálogo está tardando en responder <a href="/bazar">Volver a intentar</a>');
     }
     res.status(500).send("No se pudo cargar el bazar. Intentá nuevamente.");
 
@@ -163,7 +156,7 @@ app.get("/bazar", async (req, res) => {
 });
 
 /* =========================
-   LOGIN / REGISTER
+   LOGIN / REGISTRO
 ========================= */
 let usersWarmup;
 let lastUsersWarmup = 0;
@@ -213,7 +206,7 @@ app.post("/login", loginLimiter, async (req, res) => {
 });
 
 /* =========================
-   CART
+   CARRITO
 ========================= */
 async function cartProduct(id) {
   return findRecentProduct(String(id)) ?? requestService("products", `/products/${encodeURIComponent(id)}`, { timeoutMs: 8000 });
@@ -321,7 +314,7 @@ app.get("/logout", (req, res) => {
 });
 
 /* =========================
-   ABOUT / CATALOG
+   ABOUT / CATALOGO
 ========================= */
 app.get("/about", (req, res) => {
   res.render("pages/about", {
@@ -370,11 +363,11 @@ try {
   if (process.env.MONGO_CONTENT_URI && process.env.CONTENT_ENABLED !== "false") {
     await contentConnection.openUri(process.env.MONGO_CONTENT_URI, { dbName: "Hijos", serverSelectionTimeoutMS: 10000 })
       .then(() => console.log("Mongo de contenido conectado"))
-      .catch(() => console.warn("Contenido externo no disponible; usuarios y productos siguen independientes."));
+      .catch(() => console.warn("Contenido externo no disponible. Usuarios y productos siguen independientes."));
   }
   console.log("Mongo del carrito conectado");
   app.listen(listener.port, listener.host, () => {
-    console.log(`🚀 Server running on ${listener.host}:${listener.port}`);
+    console.log(`Server running on ${listener.host}:${listener.port}`);
   });
 } catch (err) {
   const message = err.message.replace(/mongodb(?:\+srv)?:\/\/[^\s]+/g, "[URI oculta]");

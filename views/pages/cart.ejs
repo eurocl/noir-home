@@ -20,7 +20,7 @@
 
   <%- include("navigation") %>
 
-  <!-- CART -->
+  <!-- CARRITO -->
   <section class="cart-page">
 
     <div class="cart-header">
@@ -62,12 +62,12 @@
                   <%= item.productId.description %>
                 </p>
 
-                <!-- CONTROLS -->
+                <!-- CONTROLES -->
                 <div class="cart-bottom">
 
                   <div class="cart-controls">
 
-                    <!-- DECREASE -->
+                    <!-- BOTON DE CARRITO PARA REDUCIR CANTIDAD -->
                     <form action="/cart/decrease/<%= item.productId._id %>" method="POST">
                       <button type="submit" class="qty-btn" <%= cart.checkoutOrderId ? 'disabled' : '' %>>-</button>
                     </form>
@@ -76,7 +76,7 @@
                       <%= item.quantity %>
                     </span>
 
-                    <!-- INCREASE -->
+                    <!-- BOTON DE CARRITO PARA AUMENTAR CANTIDAD -->
                     <form action="/cart/increase/<%= item.productId._id %>" method="POST">
                       <button type="submit" class="qty-btn" <%= cart.checkoutOrderId ? 'disabled' : '' %>>+</button>
                     </form>
@@ -89,7 +89,7 @@
 
                 </div>
 
-                <!-- REMOVE -->
+                <!-- ELIMINAR -->
                 <form action="/cart/remove/<%= item.productId._id %>" method="POST">
                   <button type="submit" class="remove-btn" <%= cart.checkoutOrderId ? 'disabled' : '' %>>
                     Quitar producto

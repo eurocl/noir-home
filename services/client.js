@@ -24,7 +24,7 @@ export async function requestService(service, path, { method = "GET", body, toke
         const response = await fetch(url, { ...options, signal, redirect: 'error' });
         const text = await response.text();
         let data;
-        try { data = JSON.parse(text); } catch { /* Render can return an HTML loading page. */ }
+        try { data = JSON.parse(text); } catch { /* Render puede devolver un HTML de carga. */ }
         const transient = [429, 502, 503, 504].includes(response.status) || (response.ok && data === undefined);
         if (onRender && options.method === 'GET' && (transient || (readiness && response.ok && data?.ready !== true))) {
           const retryAfter = response.headers.get('retry-after');
@@ -46,7 +46,7 @@ export async function requestService(service, path, { method = "GET", body, toke
     }
   }
   try {
-    // Wake a sleeping service with a safe read before sending a mutation once.
+    // cuando un servicio está dormido, se puede despertar con una lectura segura antes de enviar una mutación
     if (onRender && method !== 'GET') await fetchJson(new URL('/health', base), { method: 'GET' }, true);
     return await fetchJson(new URL(path, base), {
       method,
